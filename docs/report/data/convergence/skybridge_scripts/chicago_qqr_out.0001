@@ -1,0 +1,206 @@
+TMPDIR=/tmp/8319024
+Tue Sep 24 06:30:23 MDT 2019
+--mpi=pmi2 --ntasks-per-socket 8 --ntasks-per-node 16 --ntasks 16 ./pt_adam.exe --file=chicago-crime-comm.tns --minEpochs=5 --maxEpochs=100 --rank=10 --maxBadEpochs=5 --tol=0.00001 --sampling=semi-stratified --type=poisson
+Using readUsingSplattIO chicago-crime-comm.tns
+SPTensor complete; Frobenius norm = 2732.01
+KTensor complete; Lambda = 0.0291053 0.0272705 0.117291 0.0177528 
+SYSSTATS  DistributedSystem chicago-crime-comm.tns
+
+SPSTATS Distributed Sparse Tensor: chicago-crime-comm.tns
+SPSTATS   Number of processors: 16
+
+SPSTATS   Number of modes: 4
+SPSTATS   Mode sizes:      6186 24 77 32 
+
+SPSTATS   Global number of nonzeros:  5330673
+SPSTATS   Max number of nonzeros:     334075
+SPSTATS   Min number of nonzeros:     332225
+SPSTATS   Avg number of nonzeros:     333167
+SPSTATS   Imbalance (max/avg):        1.00273
+SPSTATS   Global number of zeros:  0
+SPSTATS   Max number of zeros:     0
+SPSTATS   Min number of zeros:     0
+SPSTATS   Avg number of zeros:     0
+SPSTATS   Global number of indices:  5330673
+SPSTATS   Max number of indices:     334075
+SPSTATS   Min number of indices:     332225
+SPSTATS   Avg number of indices:     333167
+SPSTATS   Imbalance (max/avg):        1.00273
+
+SPSTATS   Mode 0 map local elements min/max/avg: 283 / 741 / 386
+SPSTATS   Mode 1 map local elements min/max/avg: 24 / 24 / 24
+SPSTATS   Mode 2 map local elements min/max/avg: 77 / 77 / 77
+SPSTATS   Mode 3 map local elements min/max/avg: 28 / 31 / 29
+SPSTATS   Mode 0 global min/max GID 0 / 6185 index base 0
+SPSTATS   Mode 1 global min/max GID 0 / 23 index base 0
+SPSTATS   Mode 2 global min/max GID 0 / 76 index base 0
+SPSTATS   Mode 3 global min/max GID 0 / 31 index base 0
+
+----------------
+
+KSTATS Distributed KTensor: chicago-crime-comm.tns
+KSTATS   Number of processors: 16
+
+KSTATS   Number of modes: 4
+KSTATS   Mode sizes:      6186 24 77 32 
+
+
+KSTATS   Mode 0 map local elements min/max/avg: 386 / 387 / 386 Imbal:  1.00259
+KSTATS   Mode 1 map local elements min/max/avg: 1 / 2 / 1 Imbal:  2
+KSTATS   Mode 2 map local elements min/max/avg: 4 / 5 / 4 Imbal:  1.25
+KSTATS   Mode 3 map local elements min/max/avg: 2 / 2 / 2 Imbal:  1
+
+----------------
+SYSSTATS  Mode 0 importer:  nSend min/max/avg 0 / 354 / 208
+SYSSTATS  Mode 0 importer:  nRecv min/max/avg 0 / 354 / 208
+SYSSTATS  Mode 0 importer:  nPermute min/max/avg 0 / 386 / 154
+SYSSTATS  Mode 0 importer:  nPids min/max/avg 0 / 2 / 0
+SYSSTATS  Mode 0 importer:  maxmsg min/max/avg 0 / 354 / 207
+SYSSTATS  Mode 1 importer:  nSend min/max/avg 15 / 30 / 22
+SYSSTATS  Mode 1 importer:  nRecv min/max/avg 22 / 23 / 22
+SYSSTATS  Mode 1 importer:  nPermute min/max/avg 0 / 2 / 1
+SYSSTATS  Mode 1 importer:  nPids min/max/avg 15 / 15 / 15
+SYSSTATS  Mode 1 importer:  maxmsg min/max/avg 1 / 2 / 1
+SYSSTATS  Mode 2 importer:  nSend min/max/avg 60 / 75 / 72
+SYSSTATS  Mode 2 importer:  nRecv min/max/avg 72 / 73 / 72
+SYSSTATS  Mode 2 importer:  nPermute min/max/avg 2 / 5 / 4
+SYSSTATS  Mode 2 importer:  nPids min/max/avg 15 / 15 / 15
+SYSSTATS  Mode 2 importer:  maxmsg min/max/avg 4 / 5 / 4
+SYSSTATS  Mode 3 importer:  nSend min/max/avg 18 / 30 / 27
+SYSSTATS  Mode 3 importer:  nRecv min/max/avg 26 / 30 / 27
+SYSSTATS  Mode 3 importer:  nPermute min/max/avg 1 / 2 / 1
+SYSSTATS  Mode 3 importer:  nPids min/max/avg 15 / 15 / 15
+SYSSTATS  Mode 3 importer:  maxmsg min/max/avg 2 / 2 / 2
+
+****************************************************
+Calling DIST ADAM
+
+Fixed sample:  	stratified with 	31588 (out of 5330673) nonzeros and 	31596  zeros 
+Fixed sample nonzeros:  per-proc min/max/avg 1969 1980 1974
+Fixed sample zeros:     per-proc min/max/avg 1969 1980 1974
+Fixed sample indices:   per-proc min/max/avg 3949 3949 3949
+StocGrad sample: 	semi-stratified with 	3152 (out of 5330673) nonzeros and 	3152  zeros 
+StocGrad sample nonzeros:  per-proc min/max/avg 196 198 197
+StocGrad sample zeros:     per-proc min/max/avg 196 198 197
+StocGrad sample indices:   per-proc min/max/avg 394 394 394
+Epoch 0: fixed error = -nan
+Epoch 1: fixed error = 2.99721e+07	 Delta = -nan	 Step = 0.001 
+Epoch 2: fixed error = 2.479e+07	 Delta = 5.18208e+06	 Step = 0.001 
+Epoch 3: fixed error = 2.30752e+07	 Delta = 1.71482e+06	 Step = 0.001 
+Epoch 4: fixed error = 2.22248e+07	 Delta = 850398	 Step = 0.001 
+Epoch 5: fixed error = 2.1822e+07	 Delta = 402838	 Step = 0.001 
+Epoch 6: fixed error = 2.16616e+07	 Delta = 160401	 Step = 0.001 
+Epoch 7: fixed error = 2.15397e+07	 Delta = 121896	 Step = 0.001 
+Epoch 8: fixed error = 2.14559e+07	 Delta = 83809.4	 Step = 0.001 
+Epoch 9: fixed error = 2.13842e+07	 Delta = 71684.5	 Step = 0.001 
+Epoch 10: fixed error = 2.1232e+07	 Delta = 152206	 Step = 0.001 
+Epoch 11: fixed error = 2.11285e+07	 Delta = 103509	 Step = 0.001 
+Epoch 12: fixed error = 2.10117e+07	 Delta = 116744	 Step = 0.001 
+Epoch 13: fixed error = 2.09171e+07	 Delta = 94598.2	 Step = 0.001 
+Epoch 14: fixed error = 2.0814e+07	 Delta = 103138	 Step = 0.001 
+Epoch 15: fixed error = 2.07629e+07	 Delta = 51063.5	 Step = 0.001 
+Epoch 16: fixed error = 2.07275e+07	 Delta = 35445.6	 Step = 0.001 
+Epoch 17: fixed error = 2.07442e+07	 Delta = -16714.7	 Step = 0.001	BAD 
+Epoch 18: fixed error = 2.07034e+07	 Delta = 24070.3	 Step = 0.0001 
+Epoch 19: fixed error = 2.06862e+07	 Delta = 17228.2	 Step = 0.0001 
+Epoch 20: fixed error = 2.06753e+07	 Delta = 10844.8	 Step = 0.0001 
+Epoch 21: fixed error = 2.06625e+07	 Delta = 12811.3	 Step = 0.0001 
+Epoch 22: fixed error = 2.06512e+07	 Delta = 11325	 Step = 0.0001 
+Epoch 23: fixed error = 2.06357e+07	 Delta = 15546.1	 Step = 0.0001 
+Epoch 24: fixed error = 2.06205e+07	 Delta = 15117.4	 Step = 0.0001 
+Epoch 25: fixed error = 2.06049e+07	 Delta = 15683.9	 Step = 0.0001 
+Epoch 26: fixed error = 2.05952e+07	 Delta = 9618.45	 Step = 0.0001 
+Epoch 27: fixed error = 2.05828e+07	 Delta = 12419.9	 Step = 0.0001 
+Epoch 28: fixed error = 2.05763e+07	 Delta = 6483.57	 Step = 0.0001 
+Epoch 29: fixed error = 2.05677e+07	 Delta = 8667.27	 Step = 0.0001 
+Epoch 30: fixed error = 2.05576e+07	 Delta = 10045.2	 Step = 0.0001 
+Epoch 31: fixed error = 2.05487e+07	 Delta = 8931.56	 Step = 0.0001 
+Epoch 32: fixed error = 2.05408e+07	 Delta = 7854.69	 Step = 0.0001 
+Epoch 33: fixed error = 2.05364e+07	 Delta = 4471.84	 Step = 0.0001 
+Epoch 34: fixed error = 2.05374e+07	 Delta = -983.234	 Step = 0.0001	BAD 
+Epoch 35: fixed error = 2.05352e+07	 Delta = 1138.2	 Step = 1e-05 
+Epoch 36: fixed error = 2.05344e+07	 Delta = 798.506	 Step = 1e-05 
+Epoch 37: fixed error = 2.0534e+07	 Delta = 465.846	 Step = 1e-05 
+Epoch 38: fixed error = 2.05333e+07	 Delta = 713.302	 Step = 1e-05 
+Epoch 39: fixed error = 2.05326e+07	 Delta = 643.929	 Step = 1e-05 
+Epoch 40: fixed error = 2.05321e+07	 Delta = 553.951	 Step = 1e-05 
+Epoch 41: fixed error = 2.05318e+07	 Delta = 252.062	 Step = 1e-05 
+Epoch 42: fixed error = 2.05317e+07	 Delta = 102.526	 Step = 1e-05 
+Epoch 43: fixed error = 2.05307e+07	 Delta = 1028.77	 Step = 1e-05 
+Epoch 44: fixed error = 2.05296e+07	 Delta = 1089.05	 Step = 1e-05 
+Epoch 45: fixed error = 2.05291e+07	 Delta = 486.387	 Step = 1e-05 
+Epoch 46: fixed error = 2.05289e+07	 Delta = 158.457	 Step = 1e-05 
+Epoch 47: fixed error = 2.05286e+07	 Delta = 357.954	 Step = 1e-05 
+Epoch 48: fixed error = 2.05276e+07	 Delta = 960.06	 Step = 1e-05 
+Epoch 49: fixed error = 2.05267e+07	 Delta = 884.629	 Step = 1e-05 
+Epoch 50: fixed error = 2.05263e+07	 Delta = 440.126	 Step = 1e-05 
+Epoch 51: fixed error = 2.05253e+07	 Delta = 1021.28	 Step = 1e-05 
+Epoch 52: fixed error = 2.05244e+07	 Delta = 926.037	 Step = 1e-05 
+Epoch 53: fixed error = 2.05237e+07	 Delta = 658.959	 Step = 1e-05 
+Epoch 54: fixed error = 2.05235e+07	 Delta = 234.701	 Step = 1e-05 
+Epoch 55: fixed error = 2.0522e+07	 Delta = 1497.11	 Step = 1e-05 
+Epoch 56: fixed error = 2.05217e+07	 Delta = 257.234	 Step = 1e-05 
+Epoch 57: fixed error = 2.05217e+07	 Delta = 41.2657	 Step = 1e-05 
+Epoch 58: fixed error = 2.05212e+07	 Delta = 442.899	 Step = 1e-05 
+Epoch 59: fixed error = 2.05205e+07	 Delta = 707.791	 Step = 1e-05 
+Epoch 60: fixed error = 2.05199e+07	 Delta = 619.174	 Step = 1e-05 
+Epoch 61: fixed error = 2.05198e+07	 Delta = 103.125	 Step = 1e-05 
+Epoch 62: fixed error = 2.05193e+07	 Delta = 505.484	 Step = 1e-05 
+Epoch 63: fixed error = 2.05185e+07	 Delta = 784.608	 Step = 1e-05 
+Epoch 64: fixed error = 2.05177e+07	 Delta = 821.097	 Step = 1e-05 
+Epoch 65: fixed error = 2.05175e+07	 Delta = 141.728	 Step = 1e-05 
+Epoch 66: fixed error = 2.05171e+07	 Delta = 400.047	 Step = 1e-05 
+Epoch 67: fixed error = 2.0517e+07	 Delta = 140.812	 Step = 1e-05 
+Epoch 68: fixed error = 2.05167e+07	 Delta = 336.072	 Step = 1e-05 
+Epoch 69: fixed error = 2.05159e+07	 Delta = 770.303	 Step = 1e-05 
+Epoch 70: fixed error = 2.05158e+07	 Delta = 121.02	 Step = 1e-05 
+Epoch 71: fixed error = 2.05157e+07	 Delta = 29.8833	 Step = 1e-05 
+Epoch 72: fixed error = 2.05151e+07	 Delta = 652.28	 Step = 1e-05 
+Epoch 73: fixed error = 2.05148e+07	 Delta = 309.518	 Step = 1e-05 
+Epoch 74: fixed error = 2.05149e+07	 Delta = -132.492	 Step = 1e-05	BAD 
+Epoch 75: fixed error = 2.05147e+07	 Delta = 97.8527	 Step = 1e-06 
+Epoch 76: fixed error = 2.05146e+07	 Delta = 70.5342	 Step = 1e-06 
+Epoch 77: fixed error = 2.05146e+07	 Delta = 50.4263	 Step = 1e-06 
+Epoch 78: fixed error = 2.05145e+07	 Delta = 64.9081	 Step = 1e-06 
+Epoch 79: fixed error = 2.05144e+07	 Delta = 84.5488	 Step = 1e-06 
+Epoch 80: fixed error = 2.05144e+07	 Delta = 38.136	 Step = 1e-06 
+Epoch 81: fixed error = 2.05143e+07	 Delta = 89.8494	 Step = 1e-06 
+Epoch 82: fixed error = 2.05142e+07	 Delta = 95.6955	 Step = 1e-06 
+Epoch 83: fixed error = 2.05141e+07	 Delta = 93.6009	 Step = 1e-06 
+Epoch 84: fixed error = 2.05141e+07	 Delta = 41.0867	 Step = 1e-06 
+Epoch 85: fixed error = 2.0514e+07	 Delta = 1.25255	 Step = 1e-06 
+Epoch 86: fixed error = 2.05139e+07	 Delta = 176.239	 Step = 1e-06 
+Epoch 87: fixed error = 2.05139e+07	 Delta = 7.78529	 Step = 1e-06 
+Epoch 88: fixed error = 2.05139e+07	 Delta = -44.1546	 Step = 1e-06	BAD 
+Epoch 89: fixed error = 2.05139e+07	 Delta = 12.1568	 Step = 1e-07 
+Epoch 90: fixed error = 2.05138e+07	 Delta = 7.5766	 Step = 1e-07 
+Epoch 91: fixed error = 2.05139e+07	 Delta = -4.50744	 Step = 1e-07	BAD 
+
+DONE  StocGrad Sampling: semi-stratified; nEpochs = 91; nIterations = 91000; LossFn = Poisson
+
+==============================================================================================================
+
+                                    TimeMonitor results over 16 processors
+
+Timer Name                           MinOverProcs     MeanOverProcs    MaxOverProcs     MeanOverCallCounts    
+--------------------------------------------------------------------------------------------------------------
+00 FILE READ                         2.406 (1)        2.406 (1)        2.407 (1)        2.406 (1)             
+00 RANDOM GENERATE                   0 (0)            0 (0)            0 (0)            0 (0)                 
+01 DISTRIBUTED CP-ALS                112.7 (1)        112.7 (1)        112.7 (1)        112.7 (1)             
+CP-ADAM 00 Total                     112.7 (0)        112.7 (0)        112.7 (0)        0 (0)                 
+CP-ADAM 01 OneTimeSetup              0.0001574 (0)    0.0001796 (0)    0.0002408 (0)    0 (0)                 
+CP-ADAM 02 Init and Copy Ktensors    0.001821 (0)     0.002468 (0)     0.002691 (0)     0 (0)                 
+CP-ADAM 03 Fixed System Constr       0.1103 (0)       0.1104 (0)       0.1104 (0)       0 (0)                 
+CP-ADAM 04 Sampler Setup             0.003102 (0)     0.003124 (0)     0.003143 (0)     0 (0)                 
+CP-ADAM 05 Stoc Grad                 102.8 (0)        102.9 (0)        103 (0)          0 (0)                 
+CP-ADAM 05 Stoc Grad   MTTKRP        25.69 (0)        25.94 (0)        26.04 (0)        0 (0)                 
+--------------------------------------------------------------------------------------------------------------
+CP-ADAM 05 Stoc Grad   Sample        13.83 (0)        14.15 (0)        14.56 (0)        0 (0)                 
+CP-ADAM 05 Stoc Grad   System        53.79 (0)        54.16 (0)        54.43 (0)        0 (0)                 
+CP-ADAM 05 Stoc Grad   dF/dM         7.223 (0)        7.255 (0)        7.298 (0)        0 (0)                 
+CP-ADAM 06 LocalMatrixComp           9.505 (0)        9.561 (0)        9.634 (0)        0 (0)                 
+CP-ADAM 07 Comp Loss Func            0.09587 (0)      0.09625 (0)      0.09671 (0)      0 (0)                 
+CP-ADAM 08 Roll Back                 9.096e-05 (0)    0.0001219 (0)    0.0001368 (0)    0 (0)                 
+==============================================================================================================
+ PASS
+Tue Sep 24 06:32:20 MDT 2019 Complete

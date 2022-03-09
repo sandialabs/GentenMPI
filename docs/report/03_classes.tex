@@ -1,0 +1,134 @@
+% !TEX root = 00_MAIN.tex
+
+\chapter{GentenMPI classes} \label{sec:classes}
+
+GentenMPI's tensor and factor matrix classes rely on the Tpetra classes 
+described in Chapter~\ref{sec:trilinos}, with additional structures 
+needed to support higher-order tensor data.
+
+\section{Sparse tensor} \label{sec:sptensor}
+
+{\bf File:  pt\_sptensor.hpp}
+
+In GentenMPI's distributed sparse tensor class, each tensor nonzero is assigned
+and stored on a single processor.  Tensor nonzeros are stored in coordinate
+format; that is, a nonzero is represented by its global tensor indices
+in each mode and its value.  A processor's nonzeros' indices and values are
+stored in {\tt Kokkos::View} data structures, analogous to 2D and 1D arrays,
+respectively.
+
+For each tensor mode, the distributed tensor stores a Tpetra {\tt Map},
+listing the indices in the mode for which a processor has nonzeros.  These
+maps are analogous to the row and column maps stored for Tpetra matrices
+(see Section~\ref{sec:maps}, and most closely resemble the overlapped
+maps used for matrix
+distributions (as in Figure~\ref{fig:trilinosmap}, right).  
+For example, for a nonzero tensor entry $x_{ijk}$ in $\X$, 
+index $i$ is in the mode-0 map, index $j$ is in the mode-1 map, and index
+$k$ is in the mode-2 map.
+
+Sparse tensors may also have bounding box information specified by a distributed sparse tensor bounding box class ({\bf File: pt\_sptensor\_boundingbox.hpp}).
+In the case the tensor is distributed using a ``medium-grain'' distribution \cite{SK16}, for example, all of the processor's nonzero entries fall within a Cartesian product of mode index ranges.
+These ranges can be stored as a bounding box, which is required for sampling strategies (see \Cref{sec:sampling}) within the GCP-SGD algorithm.
+
+\section{Factor matrices} \label{sec:factormatrix}
+
+{\bf File:  pt\_factormatrix.hpp}
+
+A factor matrix $A \in \mathbb{R}^{I \times R}$ is a Tpetra {\tt MultiVector} 
+of length $I$ with $R$ vectors (see Section~\ref{sec:multivectors}).  It 
+exploits the MultiVector's methods for normalization, randomization,
+and norm calculations, as well as the MultiVector's map for its distribution.
+Like MultiVectors, factor matrices may be distributed uniquely (with 
+one-to-one maps) or with copies (with overlapped maps).
+
+By default, Tpetra stores the MultiVector data in column-major order
+(Kokkos::LayoutLeft).  For many factor matrix operations, however, data is
+more efficiently accessed row-wise --- that is, accessing 
+all $R$ entries for a given index $i$.  Thus, GentenMPI modifies the 
+Tpetra MultiVector to use row-major storage (Kokkos::LayoutRight).
+Results showing the benefit of using row-major storage are in 
+Chapter~\ref{sec:mttkrp}.
+
+\section{Square local matrices} \label{sec:squarelocalmatrix}
+
+{\bf File:  pt\_squarelocalmatrix.hpp}
+
+A square local matrix $G\in \mathbb{R}^{R \times R}$ is stored redundantly on every processor as a \texttt{Kokkos::View} 2D data structure.
+This class is used for Gram matrices of factor matrices and the temporary matrices computed from them.
+Operations defined for square local matrices include Hadamard (elementwise) products with other square local matrices and with the outer product of a vector with itself and the sum of entries in the matrix (without absolute value).
+These operations are useful in forming linear systems within CP-ALS iterations (see \Cref{sec:system}) and in computing the norm of a Kruskal tensor (see \Cref{sec:ktensor}), which itself is used in computing the 2-norm of the residual of a system (see \Cref{sec:system}).
+Square local matrices are nearly always symmetric, but this symmetry is not exploited in the implementation (computations involving these small matrices are rarely a bottleneck).
+
+\section{Kruskal tensor} \label{sec:ktensor}
+
+{\bf File:  pt\_ktensor.hpp}
+
+The distributed Kruskal tensor (ktensor) class contains a factor matrix for
+each mode of the model $\M$, and an array $\lambda$ of length $R$~\cite{TTB_Sparse}.
+%Each factor matrix 
+Factor matrices stored in the ktensor use one-to-one maps; each factor
+matrix entry is stored on only one processor. 
+The $\lambda$ array is stored redundantly on every processor.
+
+\section{System} \label{sec:system}
+
+{\bf File:  pt\_system.hpp}
+
+Many operations in tensor decomposition require both a sparse tensor and 
+a Kruskal tensor.  GentenMPI's {\tt distSystem} class couples a sparse tensor
+with a ktensor. 
+
+
+A distSystem's sparse tensor provides Tpetra maps analogous to the row
+and column maps of a Tpetra matrix. Its ktensor provides Tpetra maps 
+analogous to the domain and range maps of a Tpetra matrix.  
+The distSystem contains additional internal factor matrices for each mode, 
+distributed according to the \emph{sparse tensor's} maps. These factor
+matrices hold factor matrix entries corresponding to the stored 
+nonzeros of the sparse tensor and typically have overlapped maps.
+The internal factor matrix entries are used, for example, to evaluate
+the model $\M$ at the indices of the sparse tensor.
+To update the internal factor matrices, the distSystem uses
+a Tpetra {\tt Import} object for each mode; the object contains the 
+communication pattern necessary to transfer factor matrix entries from the
+ktensor's distribution to these internal factor matrices, and vice versa.  
+
+Operations requiring a sparse tensor and ktensor are also in the 
+distSystem class.  These operations include CP-ALS, GCP-SGD, MTTKRP,
+residual norm computation, loss function evaluation, and 
+evaluation of the model $\T M$.
+
+\section{Sampling Strategies} \label{sec:sampling}
+
+{\bf File:  pt\_samplingstrategies.hpp}
+
+The GCP-SGD algorithm \cite{KH19} can involve multiple sampling strategies of a sparse tensor (see \cref{sec:gcp_sample}).
+SamplingStrategy is a base class with a derived class for each of three different strategies: stratified, semi-stratified, and full.
+All of the sampling strategies involve only local data, even for the distributed implementation.
+For all of the cases, the sampled entries are stored as a sparse tensor (see \cref{sec:sptensor}) with both nonzero and (sampled) zero values stored explicitly.
+(Kolda~\cite{koldablog} uses the term ``scarce tensors'' to refer to sparse 
+tensors storing both nonzeros and zeros as we do here.)
+
+The stratified strategy samples nonzeros and zeros separately.
+Nonzeros are sampled uniformly from the nonzeros in the original tensor, and zeros are sampled uniformly from within the full range of indices (in the distributed case, this range is determined by the bounding box of the sparse tensor, as described in \cref{sec:sptensor}).
+In order to ensure that sampled zeros do not correspond to nonzero entries, each zero sample must be checked against the nonzero entries of the original tensor.
+This is implemented using a hash: all original nonzero entries are hashed with a \texttt{Kokkos:UnorderedMap}\footnote{The TensorHash class ({\bf File: pt\_tensorhash.hpp}) wraps the \texttt{Kokkos:UnorderedMap} in order to use a variable number of indices (up to 6).}, and sampled zero indices are checked against the hash before being accepted as samples.
+
+The semi-stratified strategy also samples nonzeros and zeros separately.
+Again, nonzeros are sampled uniformly from the nonzeros in the original tensor, and zeros are sampled uniformly from within the bounding box.
+In this case, zero samples are accepted whether or not they correspond to an original nonzero value; this possible inconsistency is accounted for within the GCP-SGD algorithm.
+
+The full sampling strategy is used only for testing and debugging.
+It samples all nonzero values and all zero values of the original tensor and stores them in sparse format.
+
+\section{Loss Functions} \label{sec:lossfns}
+
+{\bf File:  pt\_lossfns.hpp}
+
+The Generalized CP (GCP) decomposition is defined for general loss functions.
+The loss function can be specified by a derived class of the base lossFunction class.
+The base class has three key operations: function evaluation, partial derivative evaluation, and model lower bound.
+For example, for the $L^2$ loss function (for Gaussian data), the loss function evaluation returns $f(x,m) = (x-m)^2$, the partial derivative evaluation returns $\frac{\partial f}{\partial m}(x,m) = 2(x-m)$, and the model lower bound is $-\infty$ (implemented as the lowest floating point number).
+The distributions with loss functions implemented are Gaussian, Poisson (-log), Bernoulli (odds and logit), Rayleigh, and Gamma. 
+

@@ -1,0 +1,10 @@
+#!/bin/tcsh
+#
+# To build on mac:
+#   commented out search for argp in cmake/systems.cmake
+#   added files src/cmds/hacked_argp.h and 
+#               src/cmds/hacked_argp.c
+#   changed include of agrp.h to hacked_argp.h
+./configure  --with-mpi --no-openmp --prefix="." |& tee OUTPUT.CMAKE
+make |& tee OUTPUT.MAKE
+make install

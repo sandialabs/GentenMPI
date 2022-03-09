@@ -1,0 +1,22 @@
+
+Current version of LRMV taken from Trilinos sha
+9/15/19  6d2b7aea899ce91dd07dc02fd40ce4f0b4a920be
+5/21/19  9fa2e68ac1e4f147d16723b2a14d5a14ee40e27d
+Before   90b41c55b0acc552e12af803b352b258b8ec84c1
+
+In code:
+Replace LayoutLeft in pt_lrmv_decl.hpp with LayoutRight (only one instance
+needed).
+Replace LayoutLeft in pt_lrmv_def.hpp with LayoutRight (~5 instances needed)
+Global replace MultiVector with LayoutRightMultiVector in pt_lrmv_decl.hpp,
+pt_lrmv_def.hpp, and pt_lrmv_fwd.hpp
+Fix a few included filenames to include pt_lrmv_fwd.hpp, etc. made bad by the
+global replace.
+One comment "KDDKDD??" in pt_lrmv_def.hpp where not sure LayoutRight should
+work.
+
+add pt_lrmv_fwd.hpp to pt_lrmv_decl.hpp
+add LAYOUTRIGHT to #ifndef guards on the three include files (e.g., #ifndef
+TPETRA_LAYOUTRIGHTMULTIVECTOR_HPP_)
+
+

@@ -1,0 +1,15 @@
+#!
+# Clean up the mess from previous configurations.
+/bin/rm -r cmake* CMake* CPack* CTest* Testing Makefile include lib install* *last* OUTPUT*
+
+cmake \
+-D Trilinos_DIR:FILEPATH="/home/kddevin/code/Trilinos/Obj_tpetra/lib/cmake/Trilinos" \
+-D TTB_DIR:FILEPATH="/home/kddevin/code/kolda/TTB_cpp/Obj_skybridge/" \
+-D SPLATT_DIR:FILEPATH="/home/kddevin/code/kolda/splatt/build/Linux-x86_64/" \
+-D CMAKE_INSTALL_PREFIX:FILEPATH="/home/kddevin/code/kolda/kdd_sandbox/Obj_skybridge" \
+-D CMAKE_BUILD_TYPE:STRING=RELEASE  \
+-D CMAKE_VERBOSE_MAKEFILE:BOOL=OFF \
+.. |& tee OUTPUT.CMAKE
+
+make -j 6 |& tee OUTPUT.MAKE
+

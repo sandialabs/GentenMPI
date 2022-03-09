@@ -1,0 +1,30 @@
+#!/bin/bash
+#SBATCH -p short
+#SBATCH --nodes=1                     # Number of nodes with 16 cores per node
+#SBATCH --time=00:10:00               # Wall clock time (HH:MM:SS) 
+#SBATCH --account=FY190113            # WC ID
+#SBATCH -o "qq_out.lbnl.openmp.default"
+#SBATCH -e "qq_err.lbnl.openmp.default"
+
+
+ulimit -c unlimited
+if test "x${SLURM_JOB_ID}" = "x"; then export TMPDIR=/tmp/$$; else export TMPDIR=/tmp/${SLURM_JOB_ID}; fi; echo TMPDIR=${TMPDIR}
+
+PPS=8
+PPN=16
+
+EXECUTABLE=./genten
+ARGS="--input lbnl-network.tns --rank 16 --method gcp-sgd --index-base 1 --type gaussian --gnzs 9972 --gzs 10028 --fnzs 99795 --fzs 100205 --sampling semi-stratified --epochiters 1000 --maxiters 5 --prng --printitn 1  --rate 0.001 --fails 5 --frozeniters 1 --adam --adam_beta1 0.9 --adam_beta2 0.999 "
+
+export OMP_NUM_THREADS=16
+export OMP_PROC_BIND=spread
+export OMP_PLACES=threads
+
+echo $(date) Starting 
+
+# tensor format = default
+COMMAND=" --ntasks-per-socket ${PPS} --ntasks-per-node ${PPN} --ntasks 1 ${EXECUTABLE} ${ARGS} --mttkrp-method default "
+echo ${COMMAND}
+srun ${COMMAND} 
+
+echo $(date) Complete 

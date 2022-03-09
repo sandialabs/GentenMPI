@@ -1,0 +1,428 @@
+%% ------------------------------------------------------------
+%% PACKAGES
+%% ------------------------------------------------------------
+
+%% For \circledast
+\usepackage{amssymb,amsfonts,amsmath}
+
+\usepackage{algorithm}
+%\usepackage{algorithmic}
+\usepackage[noend]{algpseudocode}
+
+%% For \mathscr
+\usepackage[mathscr]{eucal}
+
+%% For \llbracket and \rrbracket, \varoast, \varoslash
+\usepackage{stmaryrd}
+
+%% For \boldsymbol
+\usepackage{amsbsy}
+
+%% For \bm (bold math)
+\usepackage{bm}
+
+%% For \set, \Set
+\usepackage{braket}
+
+%% For \multirow
+\usepackage{multirow}
+
+%% For "X" columntype that automatically calculates width
+%\usepackage{tabularx}
+%\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+%% For \sfrac
+\usepackage{xfrac}
+
+%% For attractive boxed equations
+%% https://tex.stackexchange.com/questions/20575/attractive-boxed-equations
+%usepackage{empheq}
+%usepackage[most]{tcolorbox}
+
+%% For special macros
+\usepackage{xparse}
+
+%% For special environments
+\usepackage{environ}
+
+%% For straight quote in verbatim 
+\usepackage{upquote}
+
+%% For boxed verbatim
+\usepackage{moreverb}
+
+%% For \FloatBarrier
+\usepackage{placeins}
+
+%% For pretty lists
+\usepackage{enumitem}
+
+%% Tikz - For making pretty pictures
+\usepackage{tikz}
+\usetikzlibrary{calc}
+% \usetikzlibrary{3d}
+% \usetikzlibrary{patterns}
+% \usetikzlibrary{arrows}
+% \usetikzlibrary{decorations.pathreplacing}
+
+%% For plots
+\usepackage{pgfplots}
+
+%% Subfloats
+\usepackage[font=footnotesize,justification=Centering,singlelinecheck=false]{subfig}
+
+%% Redundant but causes emacs to do useful things
+\usepackage{cleveref}
+
+%% For trimming the PNG images by px
+%\pdfpxdimen=\dimexpr 1 in/96\relax
+
+\usepackage{setspace}
+
+%% ------------------------------------------------------------
+%% MACROS - USING XPARSE METHODS FOR DEFINITION
+%% ------------------------------------------------------------
+
+\definecolor{grey}{RGB}{100,100,100}
+%KDD\algrenewcommand{\algorithmiccomment}[1]{\hfill\textcolor{grey}{// #1}}
+
+\newenvironment{inlinemath}{$}{$}
+
+% Quad-text-quad
+\NewDocumentCommand \qtext {m} {\quad\text{#1}\quad}
+
+% Reals
+\NewDocumentCommand \Real {} {\mathbb{R}}
+
+% Natural numbers
+\NewDocumentCommand \Natural {} {\mathbb{N}}
+
+% Binary numbers
+\NewDocumentCommand \Binary {} {\set{0,1}}
+
+% Range {1,2,\dots, n}
+\NewDocumentCommand \Range { m } { \set{1,2,\dots,#1} }
+
+% Tensor
+\NewDocumentCommand \T { O{} m } {\boldsymbol{#1\mathscr{\MakeUppercase{#2}}}}
+
+% Matrix
+% (Can't use \M because it denotes the low-rank "model" tensor.)
+\NewDocumentCommand \Mx { O{} m } {{\bm{#1\mathbf{\MakeUppercase{#2}}}}} 
+
+% Vector
+\NewDocumentCommand \V { O{} m } {{\bm{#1\mathbf{\MakeLowercase{#2}}}}}
+
+% --- Data Tensor: X ---
+
+% Tensor X
+\NewDocumentCommand \X { } {\T{X}}
+
+% Number of nonzeros in X
+\NewDocumentCommand \nzX {} {\nnz{\X}}
+
+% Mode-k Unfolding of tensor X
+\NewDocumentCommand \Xk { G{k} } {\Mx{X}_{(#1)}}
+
+% Single element of tensor X
+\NewDocumentCommand \xe { } {x_{i}}
+
+% --- Model Tensor: M ---
+
+% Tensor Model M
+\NewDocumentCommand \M {} {\T{M}}
+\NewDocumentCommand \Mtrue {} {\M_{\rm true}}
+% Tensor Model Single Element
+\NewDocumentCommand \me { } {m_{i}}
+
+% --- Function ---
+
+% Function F wrt X and M
+\NewDocumentCommand \FXM {} {F(\X,\M)}
+
+% Function f wrt x and m, ' means derivative wrt m
+\NewDocumentCommand \fxm {t' G{x} G{m}} {\IfBooleanTF{#1}{\FPD{f}{m}}{f}(#2,#3)}
+
+% Function f wrt x_i and m_i, ' means derivative wrt m
+\NewDocumentCommand \fxme {t'} {\IfBooleanTF{#1}{\fxm'{\xe}{\me}}{\fxm{\xe}{\me}}}
+
+% --- Weight Tensor: W ---
+
+% Tensor W
+\NewDocumentCommand \W {} {\T{W}}
+
+% % Mode-k Unfolding of Tensor W
+% %\NewDocumentCommand \Wk {} {\Mx{W}_{(k)}}
+
+% Tensor W Single Element
+\NewDocumentCommand \we {} {w_i}
+% {
+%   \IfBooleanTF{#1}
+%   {w_{\xi}}
+%   {w_{i}}
+% }
+
+% --- Partial Gradient Tensor and Stochastic Version: Y ---
+
+% Tensor Y
+\NewDocumentCommand \Y {} {\T{Y}}
+\NewDocumentCommand \Ys {} {\T[\tilde]{Y}}
+
+% Mode-k Unfolding of Tensor Y
+\NewDocumentCommand \Yk { O{k} } {\Mx{Y}_{(#1)}}
+\NewDocumentCommand \Yks { O{k} } {\Mx[\tilde]{Y}_{(#1)}} %stochastic
+
+% Tensor Y Single Element
+\NewDocumentCommand \ye { } {y_{i}}
+\NewDocumentCommand \yes { } {\tilde y_i}
+
+% Matricized Y Single Element
+\NewDocumentCommand \yke { } { y_{(k)} (i_k,i_k') }
+
+% --- Factor Matrices: A_k ---
+
+% K-th Factor Matrix: A^(k) (trailing ' for transpose)
+% \Ak{1} changes the superscript to 1
+% \Ak{1} does both (quote must come after the braces)
+\NewDocumentCommand \Ak { G{k} t' t"  } { \Mx{A}_{#1}\IfBooleanTF{#2}{^{\intercal}}{}\IfBooleanTF{#3}{^{\phantom{\intercal}}}{} }
+\NewDocumentCommand \EstAk {} {\Mx[\hat]{A}_k}
+\NewDocumentCommand \Akj {O{k} G{j}} {\V{a}_{#1}(:,#2)}
+\NewDocumentCommand \EstAkj {O{k} G{j}} {\V[\hat]{a}_{#1}(:,\pi(#2))}
+
+\NewDocumentCommand \Akset { } {\set{\Ak }}
+\NewDocumentCommand \Bkset { } {\set{\Bk }}
+\NewDocumentCommand \Ckset { } {\set{\Ck }}
+
+%\NewDocumentCommand \AkAkt { G{k} } {\Ak{#1}'\Ak{#1}"}
+
+% Factor Matrix Element a^(k)_{i_k j}
+% \NewDocumentCommand \Ake { G{k} G{i} G{j} } {
+%   a_{#1}(#2_{#1},#3)
+% }
+
+% Stacked Ak's
+%\NewDocumentCommand \avec {} {\V{a}}
+
+% --- Gradient wrt Factor Matrices: G_k (+ Stochastic Versions)---
+
+\NewDocumentCommand \Gk { G{k}  } { \Mx{G}_{#1} }
+\NewDocumentCommand \Gks { G{k}  } { \Mx[\tilde]{G}_{#1} } % stochastic version
+\NewDocumentCommand \Gkset { } {\set{\Gk}}
+\NewDocumentCommand \Gksset { } {\set{\Gks}}
+
+% --- Ktensor format ---
+
+% Ktensor (* = weights)
+\NewDocumentCommand \KT { s } {
+  \llbracket
+  \IfBooleanTF{#1}{\lvec;}{}
+  \Ak{1}, \Ak{2}, \dots,  \Ak{d} \rrbracket
+}
+
+% Matrices used in ADAM 
+\NewDocumentCommand \Bk { G{k} s } { \IfBooleanTF{#2}{\Mx[\hat]{B}_{#1}}{\Mx{B}_{#1}} }
+\NewDocumentCommand \Ck { G{k} s } { \IfBooleanTF{#2}{\Mx[\hat]{C}_{#1}}{\Mx{C}_{#1}} }
+
+% --- Khatri-Rao Products of Factor Matrices: Z ---
+
+% Khatri-Rao of all Factor Matrices but K-th : Z^(k)
+\NewDocumentCommand \Zk { G{k} t' t"} {\Mx{Z}_{#1}\IfBooleanTF{#2}{^{\intercal}}{}%
+  \IfBooleanTF{#3}{^{\phantom{\intercal}}}{}}
+
+% Khatri-Rao of all Factor Matrices : Z
+%\NewDocumentCommand \zvec { } {\Mx{Z}}
+
+\NewDocumentCommand \ZkZkt { G{k} } {\Zk{#1}'\Zk{#1}"}
+
+% Z Single Element
+%\DeclareDocumentCommand \zke { } { z_{k} (i_k',j) }
+
+% --- Sampled Indices ---
+%\NewDocumentCommand \SI {} {{\tilde{\mathcal{S}}}}
+\NewDocumentCommand \SIcnt {} {\tilde{s}_i}
+\NewDocumentCommand \NIcnt {} {\tilde{p}_i}
+\NewDocumentCommand \ZIcnt {} {\tilde{q}_i}
+
+% --- counts and probabilities for zeros and nonzeros
+
+% zero sample size
+\NewDocumentCommand \szero {} {s_{\text{\tiny zero}}}
+\NewDocumentCommand \sreject {} {s_{\text{\tiny reject}}}
+
+% zero probability
+\NewDocumentCommand \pzero {} {p_{\text{\tiny zero}}}
+% nonzero probability
+\NewDocumentCommand \pnz {} {p_{\text{\tiny nonzero}}}
+
+% --- Important Sets ---
+
+% The set of all indices
+%\NewDocumentCommand \I {} {\mathcal{I}}
+%\NewDocumentCommand \Gsamp {} {\Omega}
+%\NewDocumentCommand \Gweights {} {\set{ \omega_i }_{ i \in \Gsamp}}
+%\NewDocumentCommand \Fsamp {} {\T[\tilde]{V}}
+\NewDocumentCommand \Fs {} {\T[\tilde]{V}}
+\NewDocumentCommand \fse {} {\tilde v_i}
+% \NewDocumentCommand \Iskik {} {{\widetilde{\mathcal{I}}}_k(i_k)}
+\NewDocumentCommand \Fweights {} {\set{ \psi_i }_{i \in \Fsamp}}
+%\NewDocumentCommand \Sizes {} {\set{ n_k }}
+
+% Nonzeros & Zeros
+%\newcommand\Ntilde{\stackrel{\sim}{\smash{\mathcal{N}}\rule{0pt}{1.1ex}}}
+%\newcommand\Ntilde{{\widetilde{\mathcal{N}}}}
+%\NewDocumentCommand \Nzs { s } {\IfBooleanTF{#1}{\Ntilde}{\mathcal{N}}}
+%\NewDocumentCommand \Zs {} {\mathcal{Z}}
+% \NewDocumentCommand \Nkik { s } {\IfBooleanTF{#1}{\Ntilde}{\mathcal{N}}_k(i_k)}
+% \NewDocumentCommand \Zkik {} {\mathcal{Z}_k(i_k)}
+%\NewDocumentCommand \etakik { s } {\IfBooleanTF{#1}{\tilde}{}\eta_k(i_k) }
+% \NewDocumentCommand \zetakik {} {\zeta_k(i_k) }
+
+% --- Some useful matrices
+
+%\NewDocumentCommand \A { } {\Mx{A}}
+%\NewDocumentCommand \B {t' } {\Mx{B}\IfBooleanTF{#1}{^{\intercal}}{}}
+
+% --- Other Stuff ---
+
+
+% Set of natural numbers {1,2,...,#2}
+% \NewDocumentCommand \nnset {s m}
+% {
+%   \IfBooleanTF{#1}
+%   {\set{1,2,\dots, #2}}
+%   {\set{1, \dots, #2}}
+% }
+
+% First Partial Derivative (* for in-line)
+\NewDocumentCommand \FPD { s m m } {
+  \IfBooleanTF{#1}
+  {\tfrac{\partial #2}{\partial #3}}
+  {\frac{\partial #2}{\partial #3}}
+}
+
+% The PDF
+%\NewDocumentCommand \pdf {m m} {p(#1\,\vert\,#2)}
+
+\NewDocumentCommand{\iid}{}{i.i.d.\@ }
+%\DeclareMathOperator*{\minimize}{minimize}
+\DeclareMathOperator{\diag}{diag}
+%\DeclareMathOperator{\trace}{tr}
+\DeclareMathOperator{\rank}{rank}
+%\NewDocumentCommand{\vc}{}{\textsc{vec}}
+%\DeclareMathOperator{\logit}{logit}
+%\DeclareMathOperator{\expit}{expit}
+
+% Expectation
+\NewDocumentCommand{\Exp}{m}{\mathbb{E}[#1]}
+
+% Number of nonzeros
+\NewDocumentCommand{\nnz}{m}{\text{nnz}(#1)}
+
+\NewDocumentCommand{\LineFor}{m m}{%
+  \State\textbf{for} {#1}, \textbf{do} {#2}, \textbf{end}
+  }
+
+
+\NewDocumentCommand \plow {} {\rho_{\rm low}}
+\NewDocumentCommand \phigh {} {\rho_{\rm high}}
+  
+% \DeclareMathOperator{\prob}{Pr}
+%\DeclareMathOperator{\Prob}{Pr}
+%\DeclareMathOperator{\var}{Var}
+%\NewDocumentCommand{\Bern}{}{{\rm{Bernoulli}}}
+%\NewDocumentCommand{\ifrac}{s m m}{#2 \, \big/ \, \IfBooleanTF{#1}{#3}{(#3)}}
+%\NewDocumentCommand{\logfrac}{m m}{\log \bigl(\, #1 \, \big/ \, (#2) \, \bigr) }
+
+% --- Notes to each other ---
+\NewDocumentCommand \Note { m } {\textcolor{red}{#1}}
+
+% \NewDocumentCommand \bk { G{k}  } { \V{u}_{#1} }
+% \NewDocumentCommand \ck { G{k}  } { \V{v}_{#1} }
+% \NewDocumentCommand \ve {} {\V{e}}
+% \NewDocumentCommand \Bk {G{k}} {\Mx{U}_{#1}}
+% \NewDocumentCommand \Ck {G{k}} {\Mx{V}_{#1}}
+% \NewDocumentCommand \dOmega {} {\delta_{i \in \Omega}}
+% \NewDocumentCommand \dPsi {} {\delta_{i \in \Psi}}
+
+% \NewDocumentCommand \OmegaN {} {\Omega_{\textrm{n}}}
+% \NewDocumentCommand \OmegaZ {} {\Omega_{\textrm{z}}}
+% \NewDocumentCommand \PsiZ {} {\Psi_{\textrm{z}}}
+% \NewDocumentCommand \sN {} {s_{\textrm{n}}}
+% \NewDocumentCommand \sZ {} {s_{\textrm{z}}}
+% \NewDocumentCommand \cN {} {c_{\textrm{n}}}
+% \NewDocumentCommand \cZ {} {c_{\textrm{z}}}
+
+% Suppress hyphenation
+\hyphenation{MTTKRP}
+
+
+
+
+% % From https://tex.stackexchange.com/questions/155981/how-to-make-for-all-xxx-do-appear-on-one-line?noredirect=1&lq=1
+% \makeatletter
+% \newcommand{\LineFor}[3][default]{%
+%   \ALC@it\algorithmicfor\ #2\ \algorithmicdo%
+%   \ALC@com{#1}\ #3%
+% }
+% \newcommand{\LineEndFor}{\ALC@it\algorithmicendfor}
+% \makeatother
+
+% From https://tex.stackexchange.com/questions/51019/how-can-i-put-a-curly-brace-inside-an-algorithm-to-group-code-lines
+\newcommand{\tikzmark}[1]{\tikz[overlay,remember picture] \node (#1) {};}
+
+\newcommand*{\AddNote}[5]{%
+    \begin{tikzpicture}[overlay, remember picture]
+        \draw [decoration={brace,amplitude=0.5em},decorate,grey]
+            ($(#3)!(#1.north)!($(#3)-(0,1)$)$) --
+            ($(#3)!(#2.south)!($(#3)-(0,1)$)$)
+            node [align=center, text width=#4, pos=0.5, anchor=west, right=1em] {//
+              #5};
+    \end{tikzpicture}
+}%
+
+\newcommand{\rundesc}{Each dashed line represents a single run, and the markers signify epochs. The marker is an asterisk  if the true solution was recovered and a dot otherwise. Solid lines represent the median. Dashed black line is the function value estimate for the true solution.}
+
+\newcommand{\boxplotdesc}{}
+
+\newcommand{\lossdesc}{The \emph{same} set of samples is used to estimate the loss across every individual run.}
+
+% % #1: Label/Filename
+% % #2: Description
+% % #3: Extra sentence
+% \NewDocumentCommand{\samplefig}{m m m}{
+% \begin{figure}
+%   \centering
+%   \subfloat[Individual runs. \rundesc\@ \lossdesc]%
+%   {\label{fig:#1-sample-size-runs}~~~~\includegraphics[trim=65 0 75 0, clip, scale=0.45]%
+%     {fig-#1-sample-size.png}~~~~~}\\
+%   \subfloat[Number of times the true solution was recovered, i.e., cosine similarity $\geq$ 0.9, for each number of gradient samples.]{
+%   \label{fig:#1-sample-size-recoveries}~~~~\includegraphics[scale=0.45]{fig-#1-sample-size-bar.png}~~}~~
+%   \subfloat[Box plot of mean time per epoch and mean time per sample. \boxplotdesc]{
+%   \label{fig:#1-sample-size-epoch-time}\includegraphics[scale=0.45]{fig-#1-sample-size-time.png}}  
+% \caption{Investigating the effect of stochastic gradient sample size by running GCP-OPT-ADAM #2, with a variable number of samples per stochastic gradient.
+%   For each instance, we do 25 runs with different initial guesses. (The same 25 initial guesses are used for each instance.)
+%      #3 %If the function value increases, the step length is reduced by a factor of ten and the method continues with the solution from the prior epoch.
+%   }
+%   \label{fig:#1-sample-size}
+% \end{figure} 
+% }
+
+\NewDocumentCommand{\cpic}{m}{\includegraphics[trim=0 0 10 0, clip, scale=0.4]{fig-chicago-details-#1}}
+\NewDocumentCommand{\comppic}{m}{\label{fig:comp-#1}\includegraphics[trim=0 0 10 0, clip, scale=0.4]{fig-chicago-semistrat-#1}}
+\NewDocumentCommand{\morecomppic}{m}{%
+  \begin{figure}%
+    \includegraphics[trim=0 0 10 0, clip, scale=0.4]{fig-chicago-semistrat-#1}
+    \caption{Component #1 for Chicago crime tensor using semi-stratified sampling.}
+    \label{fig:comp-#1}%
+  \end{figure}%
+}
+
+\newcommand{\datafile}{}
+
+\newcommand{\GB}[1]{\textcolor{red}{\textbf{GB}: #1}}
+\newcommand{\KDD}[1]{\textcolor{blue}{\textbf{KDD}: #1}}
+  
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "gcp_sparse"
+%%% End:

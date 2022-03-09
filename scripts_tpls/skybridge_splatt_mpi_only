@@ -1,0 +1,5 @@
+#!/bin/tcsh
+#
+./configure  --intel --with-mpi --no-openmp --prefix="." |& tee OUTPUT.CMAKE
+make |& tee OUTPUT.MAKE
+make install

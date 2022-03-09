@@ -1,0 +1,96 @@
+#include <Teuchos_Comm.hpp>
+#include <Teuchos_RCP.hpp>
+#include <Kokkos_Core.hpp>
+
+#include "pt_factormatrix.hpp"
+
+#include <Tpetra_MultiVector.hpp>
+#include <Zoltan2_XpetraMultiVectorAdapter.hpp>
+#include <Zoltan2_PartitioningProblem.hpp>
+#include <Zoltan2_PartitioningSolution.hpp>
+
+template <typename gno_t, typename gnoview_t,
+          typename scalar_t, typename valueview_t>
+void zoltanRebalance(gnoview_t &gids, valueview_t &vals, 
+                     const Teuchos::RCP<const Teuchos::Comm<int> > &comm)
+{
+  // Store coordinates in Tpetra Multivector
+  // TODO:  use adapters that work directly with Kokkos::Views, to avoid
+  // TODO:  MultiVector overhead, copies LayoutLeft <-> LayoutRight, etc.
+  size_t len = vals.extent(0);
+  std::cout << comm->getRank() << " BEFORE have " << len << " ids" << std::endl;
+
+  Tpetra::global_size_t dummy =
+                    Teuchos::OrdinalTraits<Tpetra::global_size_t>::invalid();
+
+  typedef Tpetra::Map<> map_t;
+  Teuchos::RCP<map_t> map = Teuchos::rcp(new map_t(dummy, len, 0, comm));
+
+  // Need GIDs in format that Tpetra MultiVector requires in constructor
+  // (LayoutRight vs LayoutLeft)
+  typedef Tpetra::MultiVector<gno_t> gnomv_t;
+  typedef Kokkos::View<gno_t **, pt::distFactorMatrix<>::mvector_layout_t>
+          gnomv_view_t;
+
+  gnomv_view_t tmpgids;
+  pt::copyView(tmpgids, gids);
+
+  Teuchos::RCP<const gnomv_t> gidsVec = Teuchos::rcp(new gnomv_t(map, tmpgids));
+
+  // create Tpetra Multivector adapter
+  typedef Zoltan2::XpetraMultiVectorAdapter<gnomv_t> ia_t;
+  ia_t ia(gidsVec);
+
+  // Partition
+  Teuchos::ParameterList params;
+  params.set("algorithm", "multijagged");
+
+  Zoltan2::PartitioningProblem<ia_t> problem(&ia, &params, comm);
+  try {
+    problem.solve();
+  }
+  catch (std::exception &e) {
+    std::cout << "Error in zoltanRebalance: solve " << e.what() << std::endl;
+    throw e;
+  }
+  
+  // Migrate GIDs
+  {
+    gnomv_t *newGIDVec;
+    ia.applyPartitioningSolution(*gidsVec, newGIDVec, problem.getSolution());
+    typedef typename gnomv_t::node_type::memory_space memoryspace_t;
+    auto newVecView = newGIDVec->template getLocalView<memoryspace_t>();
+    pt::copyView(gids, newVecView);  // handles LayoutRight vs LayoutLeft
+    delete newGIDVec;
+  }
+
+  // Store val in Tpetra Multivector and migrate
+  {
+    // Need GIDs in format that Tpetra MultiVector requires in constructor
+    // (LayoutRight vs LayoutLeft)
+    typedef Tpetra::Vector<scalar_t> valmv_t;
+    typedef Kokkos::View<scalar_t *, pt::distFactorMatrix<>::mvector_layout_t>
+            valmv_view_t;
+
+    valmv_view_t tmpvals;
+    pt::copyView(tmpvals, vals);
+  
+    Teuchos::RCP<const valmv_t> valVec = Teuchos::rcp(new valmv_t(map,tmpvals));
+    valmv_t *newValVec;
+
+    typedef Zoltan2::XpetraMultiVectorAdapter<valmv_t> via_t;
+    via_t via(valVec);
+    via.applyPartitioningSolution(*valVec, newValVec, problem.getSolution());
+    typedef typename valmv_t::node_type::memory_space memoryspace_t;
+    auto newVecView = newValVec->template getLocalView<memoryspace_t>();
+    pt::copyView(vals, newVecView);  // handles LayoutRight vs LayoutLeft
+    delete newValVec;
+  }
+
+  // Sanity check
+  std::cout << comm->getRank() << " AFTER have " << vals.extent(0) << " ids" 
+            << std::endl;
+
+  return;
+}
+

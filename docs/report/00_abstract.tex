@@ -1,0 +1,19 @@
+GentenMPI is a toolkit of sparse canonical polyadic (CP)
+tensor decomposition algorithms that is
+designed to run effectively on distributed-memory high-performance computers.
+Its use of distributed-memory parallelism enables it to efficiently 
+decompose tensors that are too large for a single compute node's memory.
+GentenMPI leverages Sandia's decades-long investment in the Trilinos solver
+framework for much of its parallel-computation capability.  Trilinos contains
+numerical algorithms and linear algebra classes that have been optimized for
+parallel simulation of complex physical phenomena.  This work applies these 
+tools to the data science problem of sparse tensor decomposition.  In this
+report, we describe the use of Trilinos in GentenMPI, extensions needed 
+for sparse tensor decomposition, and implementations of the CP-ALS
+(CP via alternating least squares~\cite{CC70,Harshman70}) and 
+GCP-SGD (generalized CP via 
+stochastic gradient descent~\cite{HKD18, HoKoDu20, KH19})
+sparse tensor decomposition algorithms.  We show that GentenMPI can 
+decompose sparse tensors of extreme size, e.g., a 12.6-terabyte
+tensor on 8192 computer cores.  We demonstrate that the Trilinos backbone 
+provides good strong and weak scaling of the tensor decomposition algorithms.

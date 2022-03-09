@@ -1,0 +1,115 @@
+TMPDIR=/tmp/8229392
+Mon Sep 16 21:19:10 MDT 2019
+--mpi=pmi2 --ntasks-per-socket 8 --ntasks-per-node 16 --ntasks 256 ./pt_adam.exe --file=amazon-reviews.bin --minEpochs=5 --maxEpochs=5 --rank=16 --maxBadEpochs=5 --tol=0.00001 --sampling=semi-stratified --initDecomp=uniformBox
+Using readWithUniformBlocks amazon-reviews.bin
+SPTensor complete; Frobenius norm = 121614
+KTensor complete; Lambda = 0.0611426 0.0178431 0.0156066 
+SYSSTATS  DistributedSystem amazon-reviews.bin
+
+SPSTATS Distributed Sparse Tensor: amazon-reviews.bin
+SPSTATS   Number of processors: 256
+
+SPSTATS   Number of modes: 3
+SPSTATS   Mode sizes:      4821207 1774269 1805187 
+
+SPSTATS   Global number of nonzeros:  1741809018
+SPSTATS   Max number of nonzeros:     16695949
+SPSTATS   Min number of nonzeros:     4685370
+SPSTATS   Avg number of nonzeros:     6.80394e+06
+SPSTATS   Imbalance (max/avg):        2.45386
+SPSTATS   Global number of zeros:  0
+SPSTATS   Max number of zeros:     0
+SPSTATS   Min number of zeros:     0
+SPSTATS   Avg number of zeros:     0
+SPSTATS   Global number of indices:  1741809018
+SPSTATS   Max number of indices:     16695949
+SPSTATS   Min number of indices:     4685370
+SPSTATS   Avg number of indices:     6.80394e+06
+SPSTATS   Imbalance (max/avg):        2.45386
+
+SPSTATS   Mode 0 map local elements min/max/avg: 136659 / 172867 / 154450
+SPSTATS   Mode 1 map local elements min/max/avg: 122509 / 239277 / 146405
+SPSTATS   Mode 2 map local elements min/max/avg: 84131 / 209683 / 107902
+SPSTATS   Mode 0 global min/max GID 0 / 4821206 index base 0
+SPSTATS   Mode 1 global min/max GID 0 / 1774268 index base 0
+SPSTATS   Mode 2 global min/max GID 0 / 1805186 index base 0
+
+----------------
+
+KSTATS Distributed KTensor: amazon-reviews.bin
+KSTATS   Number of processors: 256
+
+KSTATS   Number of modes: 3
+KSTATS   Mode sizes:      4821207 1774269 1805187 
+
+
+KSTATS   Mode 0 map local elements min/max/avg: 18832 / 18833 / 18832 Imbal:  1.00005
+KSTATS   Mode 1 map local elements min/max/avg: 6930 / 6931 / 6930 Imbal:  1.00014
+KSTATS   Mode 2 map local elements min/max/avg: 7051 / 7052 / 7051 Imbal:  1.00014
+
+----------------
+SYSSTATS  Mode 0 importer:  nSend min/max/avg 132623 / 164653 / 144795
+SYSSTATS  Mode 0 importer:  nRecv min/max/avg 128160 / 161963 / 144795
+SYSSTATS  Mode 0 importer:  nPermute min/max/avg 8395 / 11402 / 9655
+SYSSTATS  Mode 0 importer:  nPids min/max/avg 15 / 31 / 15
+SYSSTATS  Mode 0 importer:  maxmsg min/max/avg 9436 / 11554 / 10232
+SYSSTATS  Mode 1 importer:  nSend min/max/avg 128857 / 164087 / 145832
+SYSSTATS  Mode 1 importer:  nRecv min/max/avg 120655 / 235629 / 145832
+SYSSTATS  Mode 1 importer:  nPermute min/max/avg 0 / 3720 / 572
+SYSSTATS  Mode 1 importer:  nPids min/max/avg 63 / 128 / 64
+SYSSTATS  Mode 1 importer:  maxmsg min/max/avg 3210 / 3915 / 3562
+SYSSTATS  Mode 2 importer:  nSend min/max/avg 91933 / 117459 / 107482
+SYSSTATS  Mode 2 importer:  nRecv min/max/avg 82943 / 206514 / 107482
+SYSSTATS  Mode 2 importer:  nPermute min/max/avg 0 / 3188 / 419
+SYSSTATS  Mode 2 importer:  nPids min/max/avg 63 / 128 / 64
+SYSSTATS  Mode 2 importer:  maxmsg min/max/avg 2764 / 3378 / 3154
+
+****************************************************
+Calling DIST ADAM
+
+Fixed sample:  	stratified with 	41214467 (out of 1741809018) nonzeros and 	42791933  zeros 
+Fixed sample nonzeros:  per-proc min/max/avg 112986 295335 160994
+Fixed sample zeros:     per-proc min/max/avg 32815 215164 167155
+Fixed sample indices:   per-proc min/max/avg 328150 328150 328150
+StocGrad sample: 	semi-stratified with 	4121328 (out of 1741809018) nonzeros and 	4279312  zeros 
+StocGrad sample nonzeros:  per-proc min/max/avg 11298 29533 16098
+StocGrad sample zeros:     per-proc min/max/avg 3282 21517 16716
+StocGrad sample indices:   per-proc min/max/avg 32815 32815 32815
+Epoch 0: fixed error = 1.40771e+10
+Epoch 1: fixed error = 1.41388e+10	 Delta = -6.1684e+07	 Step = 0.001	BAD 
+Epoch 2: fixed error = 1.40765e+10	 Delta = 610272	 Step = 0.0001 
+Epoch 3: fixed error = 1.40722e+10	 Delta = 4.3316e+06	 Step = 0.0001 
+Epoch 4: fixed error = 1.40657e+10	 Delta = 6.45042e+06	 Step = 0.0001 
+Epoch 5: fixed error = 1.40562e+10	 Delta = 9.48251e+06	 Step = 0.0001 
+
+DONE  StocGrad Sampling: semi-stratified; nEpochs = 5; nIterations = 5000; LossFn = L2
+Residual norm = 121633Residual norm squared = 1.47947e+10
+
+DIST ADAM numIter 0 resNorm 0
+============================================================================================================
+
+                                  TimeMonitor results over 256 processors
+
+Timer Name                           MinOverProcs    MeanOverProcs    MaxOverProcs    MeanOverCallCounts    
+------------------------------------------------------------------------------------------------------------
+00 FILE READ                         301.9 (1)       301.9 (1)        301.9 (1)       301.9 (1)             
+00 RANDOM GENERATE                   0 (0)           0 (0)            0 (0)           0 (0)                 
+01 DISTRIBUTED CP-ALS                2257 (1)        2257 (1)         2257 (1)        2257 (1)              
+CP-ADAM 00 Total                     2249 (0)        2249 (0)         2249 (0)        0 (0)                 
+CP-ADAM 01 OneTimeSetup              0.007859 (0)    0.02683 (0)      0.03566 (0)     0 (0)                 
+CP-ADAM 02 Init and Copy Ktensors    0.04961 (0)     0.05539 (0)      0.07977 (0)     0 (0)                 
+CP-ADAM 03 Fixed System Constr       8.867 (0)       8.918 (0)        8.945 (0)       0 (0)                 
+CP-ADAM 04 Sampler Setup             0.05423 (0)     0.08775 (0)      0.1722 (0)      0 (0)                 
+CP-ADAM 05 Stoc Grad                 2150 (0)        2155 (0)         2158 (0)        0 (0)                 
+CP-ADAM 05 Stoc Grad   MTTKRP        1121 (0)        1175 (0)         1286 (0)        0 (0)                 
+------------------------------------------------------------------------------------------------------------
+CP-ADAM 05 Stoc Grad   Sample        153.6 (0)       186.3 (0)        238.6 (0)       0 (0)                 
+CP-ADAM 05 Stoc Grad   System        655 (0)         739.4 (0)        771.1 (0)       0 (0)                 
+CP-ADAM 05 Stoc Grad   dF/dM         30.23 (0)       33.13 (0)        35.2 (0)        0 (0)                 
+CP-ADAM 06 LocalMatrixComp           77.95 (0)       81.45 (0)        86.42 (0)       0 (0)                 
+CP-ADAM 07 Comp Loss Func            3.538 (0)       3.593 (0)        3.664 (0)       0 (0)                 
+CP-ADAM 08 Roll Back                 0.006811 (0)    0.008056 (0)     0.0213 (0)      0 (0)                 
+Innerprod                            7.294 (1)       7.294 (1)        7.294 (1)       7.294 (1)             
+============================================================================================================
+ PASS
+Mon Sep 16 22:01:57 MDT 2019 Complete

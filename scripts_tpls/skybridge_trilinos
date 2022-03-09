@@ -1,0 +1,41 @@
+#!
+
+# Clean up the mess from previous configurations.
+/bin/rm -r cmake* CMake* CPack* CTest* OUTPUT* Dart* Trilinos* Testing Makefile Users include lib install* *last* 
+
+module load cmake/3.11.1
+
+cmake \
+-D CMAKE_BUILD_TYPE:STRING="RELEASE" \
+-D CMAKE_INSTALL_PREFIX:FILEPATH="/home/kddevin/code/Trilinos/Obj_tpetra" \
+-D CMAKE_VERBOSE_MAKEFILE:BOOL=OFF \
+\
+-D TPL_ENABLE_MPI:BOOL=ON \
+-D MPI_EXEC_MAX_NUMPROCS:STRING=11 \
+\
+-D TPL_ENABLE_BinUtils:BOOL=OFF \
+-D TPL_ENABLE_Pthread:BOOL=OFF \
+\
+-D CMAKE_C_FLAGS:STRING="-fopenmp -Wno-sign-compare" \
+-D CMAKE_CXX_FLAGS:STRING="-fopenmp -Wno-sign-compare" \
+\
+-D Trilinos_ENABLE_EXPLICIT_INSTANTIATION:BOOL=ON \
+-D Trilinos_ENABLE_ALL_OPTIONAL_PACKAGES:BOOL=OFF \
+-D Trilinos_ENABLE_TESTS:BOOL=OFF \
+-D Trilinos_ENABLE_EXAMPLES:BOOL=OFF \
+-D Trilinos_VERBOSE_CONFIGURE:BOOL=OFF \
+\
+-D Trilinos_ENABLE_CXX11:BOOL=ON \
+\
+-D Trilinos_ENABLE_Zoltan2:BOOL=ON \
+-D Trilinos_ENABLE_Tpetra:BOOL=ON \
+-D Tpetra_INST_FLOAT:BOOL=ON \
+-D Teuchos_ENABLE_FLOAT:BOOL=ON \
+-D Teuchos_ENABLE_LONG_LONG_INT:BOOL=ON \
+\
+-D Teuchos_ENABLE_STACKTRACE=OFF \
+.. |& tee OUTPUT.CMAKE
+
+make -j 6 |& tee OUTPUT.MAKE
+make install
+

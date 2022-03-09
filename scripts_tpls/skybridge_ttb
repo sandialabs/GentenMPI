@@ -1,0 +1,18 @@
+#!
+# Clean up the mess from previous configurations.
+/bin/rm -r cmake* CMake* CPack* CTest* OUTPUT* Dart* Trilinos* Testing Makefile include lib install* *last*
+
+cmake \
+-D Trilinos_ENABLE_EXPLICIT_INSTANTIATION:BOOL=ON \
+-D CMAKE_BUILD_TYPE:STRING="RELEASE" \
+-D CMAKE_VERBOSE_MAKEFILE:BOOL=OFF \
+-D CMAKE_INSTALL_PREFIX:FILEPATH="/home/kddevin/code/kolda/TTB_cpp/Obj_skybridge" \
+\
+-D CMAKE_C_FLAGS:STRING="-Wall  -pedantic -Wno-unknown-pragmas -Wno-narrowing -Wno-inline -Wshadow -Wsign-compare  -Wtype-limits   -Wuninitialized -Winit-self -fstrict-aliasing -Wno-long-long -restrict" \
+-D CMAKE_CXX_FLAGS:STRING="-Wall -pedantic -Wno-unknown-pragmas -Wno-narrowing -Wno-inline -Wshadow -Wsign-compare  -Wtype-limits   -Wuninitialized -Winit-self -fstrict-aliasing -restrict" \
+\
+.. |& tee OUTPUT.CMAKE
+
+make |& tee OUTPUT.MAKE
+
+make install

@@ -1,0 +1,99 @@
+% !TEX root = 00_MAIN.tex
+
+\chapter{Introduction} \label{sec:intro}
+
+GentenMPI is a toolkit of sparse tensor decomposition algorithms that is
+designed to run effectively on distributed-memory high-performance computers.
+Its use of distributed-memory parallelism enables it to efficiently 
+operate on tensors that are too large for a single compute node's memory.
+And its use of the Trilinos framework's Tpetra linear algebra classes
+delivers scalable performance on large number of processors.
+
+Tensor decomposition is a valuable tool in data analysis and unsupervised
+machine learning. 
+Kolda and Bader~\cite{KB09} provide a complete mathematical 
+description of tensor operations and 
+survey of tensor decomposition methods. Here, we present only the details
+needed to describe GentenMPI.
+
+For simplicity, we present 
+algorithms using a three-way tensor $\X$ with dimensions $I \times J \times K$.
+GentenMPI, however, handles tensors of arbitrary order and, indeed,
+many of the results presented are for tensors with order greater than three.
+$\X$ is assumed to be sparse; that is, most tensor entries $x_{ijk}$ are zero.
+
+Tensor decomposition can be see as an extension of matrix decomposition to
+higher order.
+The commonly used 
+Canonical Polyadic (CP) decomposition~\cite{CC70,Harshman70}
+is a tensor decomposition 
+in which tensor $\X$ is approximated
+by $\M$, the sum of $R$ rank-one tensors. 
+For a three-way tensor, CP decomposition can be written as 
+\begin{equation}
+\label{eq:model}
+x_{ijk} \approx m_{ijk} = \sum_{r=1}^R \lambda_r a_{ir} b_{jr} c_{kr}
+\end{equation}
+where $a_{ir}$, $b_{jr}$ and $c_{kr}$ are entries of factor matrices
+$A \in \mathbb{R}^{I \times R}$, $B \in \mathbb{R}^{J \times R}$, and 
+$C \in \mathbb{R}^{K \times R}$, respectively, and $\lambda \in \mathbb{R}^R$
+is a weighting vector.  We refer to $\M$ as the \emph{model} and represent
+it by the \emph{Kruskal} tensor $[\lambda; A, B, C]$.
+The goal is to minimize the difference between $\X$ and $\M$ with respect 
+to some loss function $f(x,m)$
+\begin{equation}
+  \label{eq:gcp}
+  \text{minimize } F(\X,\M) \equiv \sum_{i=1}^{I} \sum_{j=1}^J \sum_{k=1}^K 
+f(x_{ijk}, m_{ijk}) \qtext{subject to} \rank(\M) \leq R.
+\end{equation}
+
+The CP-ALS (canonical polyadic decomposition via alternating least squares) 
+method~\cite{CC70,Harshman70} 
+uses an $L^2$ loss function 
+$f(x,m) \equiv (x-m)^2$ in Equation~\ref{eq:gcp} and an alternating
+least squares approach to solve the optimization; details are in
+Chapter~\ref{sec:cpals}.
+In their generalized CP (GCP) tensor decomposition,
+Hong, Kolda and Duersch~\cite{HKD18,HoKoDu20} support general 
+loss functions.  By providing appropriate loss functions, users can 
+better represent tensors with special form, such as tensors with binary-valued
+or non-negative-valued data. A method for solving GCP's optimization
+via stochastic gradient descent (SGD) was proposed by Kolda and 
+Hong~\cite{KH19}; this algorithm is described in Chapter~\ref{sec:gcp}.
+
+The Matlab toolkit Tensor Toolbox~\cite{TTB_Sparse,TensorToolbox} provides 
+implementations of both CP-ALS and GCP-SGD tensor decomposition.
+The C++ toolkit GenTen~\cite{GenTen,PK19} builds on the Kokkos~\cite{ETS14,Kokkos}
+performance portability library to provide CP-ALS and GCP-SGD implementations
+that can run on multicore CPUs and GPUs.
+In distributed memory systems, the SPLATT~\cite{SK16,SPLATT} 
+library performs CP-ALS using
+OpenMP for on-node multithreading and MPI for interprocessor communication.
+
+Our new GentenMPI implementation provides CP-ALS and GCP-SGD for distributed
+memory systems.
+It leverages Sandia's decades-long investment in the Trilinos solver
+framework~\cite{Trilinos,HB+05} for much of its parallel-computation capability.  Trilinos contains
+numerical algorithms and linear algebra classes that have been optimized for
+parallel simulation of complex physical phenomena.  Its Tpetra linear 
+algebra package~\cite{BH12,Tpetra} contains classes for distributed maps,
+vectors, multivectors, and sparse matrices; these building blocks are used
+as key kernels of GentenMPI's tensor decomposition.
+
+In this report, we describe the implementation and performance of GentenMPI.
+We provide a brief introduction to Trilinos' linear algebra
+package Tpetra~\cite{BH12,Tpetra}.  We then detail GentenMPI's main classes, 
+with their use of Tpetra and extensions needed 
+for sparse tensor decomposition. 
+We describe the implementation of a key kernel of CP-ALS and GCP-SGD: the 
+MTTKRP (Matricized Tensor Times Khatri-Rao Product).
+We then present implementations and results of CP-ALS and GCP-SGD using
+GentenMPI.  We show that GentenMPI can 
+decompose sparse tensors of extreme size, e.g., a 12.6-terabyte
+tensor on 8192 computer cores.  We demonstrate that the Trilinos backbone 
+provides good strong and weak scaling of the tensor decomposition algorithms.
+
+
+
+
+

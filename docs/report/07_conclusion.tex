@@ -1,0 +1,25 @@
+\chapter{Conclusions and Future Work} \label{sec:conc}
+
+We have described GentenMPI, a toolkit for computing low-rank approximations
+of sparse tensors on distributed memory parallel computers.  GentenMPI is built 
+on the Trilinos scientific computing toolkit, which provides data structures
+and parallel communication classes that can be exploited in tensor 
+decomposition.  Using this infrastructure, GentenMPI provides implementations
+of the classic CP-ALS low-rank decomposition using alternating least squares
+optimization, and the new GCP-SGD method supporting arbitrary loss functions.
+We present parallel distribution strategies for sampling tensors in 
+distributed memory environments.  And we demonstrate that GentenMPI can achieve 
+good parallel scalability, while enabling decomposition of tensors too large
+for single-memory computers.
+
+Future work will combine the distributed memory capabilities of GentenMPI with
+the multicore- and GPU-capabilities of Genten.  Both Genten and Trilinos rely
+on Kokkos for performance-portable multicore and GPU kernels.  On-node
+parallelism related to factor matrices and MPI communication packing/unpacking
+will be managed by existing Trilinos classes.  On-node parallelism in 
+operations such as MTTKRP will exploit methods in Genten.  Some modification
+of GentenMPI's tensor storage will be needed to accommodate use of Genten
+on the node.  In the end, our
+multicore and GPU version of GentenMPI will exploit the fine-grained
+parallelism in Trilinos and Genten.
+

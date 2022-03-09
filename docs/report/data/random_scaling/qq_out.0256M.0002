@@ -1,0 +1,147 @@
+TMPDIR=/tmp/8225579
+Sun Sep 15 23:04:04 MDT 2019 Starting
+--mpi=pmi2 --ntasks-per-socket 2 --ntasks-per-node 2 --ntasks 2 ./pt_adam.exe --random=256000000 --modes=1000x1000x500x500 --dist=2x1x1x1 --minEpochs=5 --maxEpochs=5 --rank=16 --maxBadEpochs=5 --tol=0.00001 --sampling=semi-stratified --fns=5117360 --gns=1535200
+Random:  Computing ranges
+Random:  Generating nonzeros of size 2
+!! Using Kokkos::UnorderedMap !!
+0    10000000 0
+0    20000000 0
+0    30000000 0
+0    40000000 0
+0    50000000 0
+0    60000000 0
+0    70000000 0
+0    80000000 0
+0    90000000 0
+0    100000000 0
+0    110000000 0
+0    120000000 0
+Random:  Allocating Kokkos::View
+Random:  Copying to Kokkos::View
+Random:  Sptensor constructor
+SPTensor complete; Frobenius norm = 99253.7
+KTensor complete; Lambda = 0.014409 0.0131568 0.0665892 0.011842 
+SYSSTATS  DistributedSystem random 
+
+SPSTATS Distributed Sparse Tensor: random 
+SPSTATS   Number of processors: 2
+
+SPSTATS   Number of modes: 4
+SPSTATS   Mode sizes:      1000 1000 500 500 
+
+SPSTATS   Global number of nonzeros:  255869396
+SPSTATS   Max number of nonzeros:     127934698
+SPSTATS   Min number of nonzeros:     127934698
+SPSTATS   Avg number of nonzeros:     1.27935e+08
+SPSTATS   Imbalance (max/avg):        1
+SPSTATS   Global number of zeros:  0
+SPSTATS   Max number of zeros:     0
+SPSTATS   Min number of zeros:     0
+SPSTATS   Avg number of zeros:     0
+SPSTATS   Global number of indices:  255869396
+SPSTATS   Max number of indices:     127934698
+SPSTATS   Min number of indices:     127934698
+SPSTATS   Avg number of indices:     1.27935e+08
+SPSTATS   Imbalance (max/avg):        1
+
+SPSTATS   Mode 0 map local elements min/max/avg: 500 / 500 / 500
+SPSTATS   Mode 1 map local elements min/max/avg: 1000 / 1000 / 1000
+SPSTATS   Mode 2 map local elements min/max/avg: 500 / 500 / 500
+SPSTATS   Mode 3 map local elements min/max/avg: 500 / 500 / 500
+SPSTATS   Mode 0 global min/max GID 0 / 999 index base 0
+SPSTATS   Mode 1 global min/max GID 0 / 999 index base 0
+SPSTATS   Mode 2 global min/max GID 0 / 499 index base 0
+SPSTATS   Mode 3 global min/max GID 0 / 499 index base 0
+
+----------------
+
+KSTATS Distributed KTensor: random 
+KSTATS   Number of processors: 2
+
+KSTATS   Number of modes: 4
+KSTATS   Mode sizes:      1000 1000 500 500 
+
+
+KSTATS   Mode 0 map local elements min/max/avg: 500 / 500 / 500 Imbal:  1
+KSTATS   Mode 1 map local elements min/max/avg: 500 / 500 / 500 Imbal:  1
+KSTATS   Mode 2 map local elements min/max/avg: 250 / 250 / 250 Imbal:  1
+KSTATS   Mode 3 map local elements min/max/avg: 250 / 250 / 250 Imbal:  1
+
+----------------
+SYSSTATS  Mode 0 importer:  nSend min/max/avg 0 / 0 / 0
+SYSSTATS  Mode 0 importer:  nRecv min/max/avg 0 / 0 / 0
+SYSSTATS  Mode 0 importer:  nPermute min/max/avg 500 / 500 / 500
+SYSSTATS  Mode 0 importer:  nPids min/max/avg 0 / 0 / 0
+SYSSTATS  Mode 0 importer:  maxmsg min/max/avg 0 / 0 / 0
+SYSSTATS  Mode 1 importer:  nSend min/max/avg 500 / 500 / 500
+SYSSTATS  Mode 1 importer:  nRecv min/max/avg 500 / 500 / 500
+SYSSTATS  Mode 1 importer:  nPermute min/max/avg 500 / 500 / 500
+SYSSTATS  Mode 1 importer:  nPids min/max/avg 1 / 1 / 1
+SYSSTATS  Mode 1 importer:  maxmsg min/max/avg 500 / 500 / 500
+SYSSTATS  Mode 2 importer:  nSend min/max/avg 250 / 250 / 250
+SYSSTATS  Mode 2 importer:  nRecv min/max/avg 250 / 250 / 250
+SYSSTATS  Mode 2 importer:  nPermute min/max/avg 250 / 250 / 250
+SYSSTATS  Mode 2 importer:  nPids min/max/avg 1 / 1 / 1
+SYSSTATS  Mode 2 importer:  maxmsg min/max/avg 250 / 250 / 250
+SYSSTATS  Mode 3 importer:  nSend min/max/avg 250 / 250 / 250
+SYSSTATS  Mode 3 importer:  nRecv min/max/avg 250 / 250 / 250
+SYSSTATS  Mode 3 importer:  nPermute min/max/avg 250 / 250 / 250
+SYSSTATS  Mode 3 importer:  nPids min/max/avg 1 / 1 / 1
+SYSSTATS  Mode 3 importer:  maxmsg min/max/avg 250 / 250 / 250
+
+****************************************************
+Calling DIST ADAM
+
+Fixed sample:  	stratified with 	2558680 (out of 255869396) nonzeros and 	2558680  zeros 
+Fixed sample nonzeros:  per-proc min/max/avg 1279340 1279340 1279340
+Fixed sample zeros:     per-proc min/max/avg 1279340 1279340 1279340
+Fixed sample indices:   per-proc min/max/avg 2558680 2558680 2558680
+StocGrad sample: 	semi-stratified with 	767600 (out of 255869396) nonzeros and 	767600  zeros 
+StocGrad sample nonzeros:  per-proc min/max/avg 383800 383800 383800
+StocGrad sample zeros:     per-proc min/max/avg 383800 383800 383800
+StocGrad sample indices:   per-proc min/max/avg 767600 767600 767600
+Epoch 0: fixed error = 9.85548e+09
+Epoch 1: fixed error = 9.84755e+09	 Delta = 7.92698e+06	 Step = 0.001 
+Epoch 2: fixed error = 9.84755e+09	 Delta = 1202.24	 Step = 0.001 
+Epoch 3: fixed error = 9.84755e+09	 Delta = 205.265	 Step = 0.001 
+Epoch 4: fixed error = 9.84755e+09	 Delta = -163.634	 Step = 0.001	BAD 
+Epoch 5: fixed error = 9.84755e+09	 Delta = 2328.93	 Step = 0.0001 
+
+DONE  StocGrad Sampling: semi-stratified; nEpochs = 5; nIterations = 5000; LossFn = L2
+Residual norm = 99213.8Residual norm squared = 9.84338e+09
+
+DIST ADAM numIter 0 resNorm 0
+==============================================================================================================
+
+                                    TimeMonitor results over 2 processors
+
+Timer Name                           MinOverProcs     MeanOverProcs    MaxOverProcs     MeanOverCallCounts    
+--------------------------------------------------------------------------------------------------------------
+00 FILE READ                         0 (0)            0 (0)            0 (0)            0 (0)                 
+00 RANDOM GENERATE                   81.87 (1)        81.87 (1)        81.87 (1)        81.87 (1)             
+01 DISTRIBUTED CP-ALS                2831 (1)         2831 (1)         2831 (1)         2831 (1)              
+CP-ADAM 00 Total                     2774 (0)         2774 (0)         2774 (0)         0 (0)                 
+CP-ADAM 01 OneTimeSetup              0.0001516 (0)    0.0001576 (0)    0.0001637 (0)    0 (0)                 
+CP-ADAM 02 Init and Copy Ktensors    0.001556 (0)     0.001581 (0)     0.001607 (0)     0 (0)                 
+CP-ADAM 03 Fixed System Constr       59.36 (0)        59.36 (0)        59.36 (0)        0 (0)                 
+CP-ADAM 04 Sampler Setup             1.034 (0)        1.035 (0)        1.035 (0)        0 (0)                 
+CP-ADAM 05 SG ModelEval              0 (0)            0 (0)            0 (0)            0 (0)                 
+CP-ADAM 05 Stoc Grad                 2707 (0)         2707 (0)         2707 (0)         0 (0)                 
+--------------------------------------------------------------------------------------------------------------
+CP-ADAM 05 Stoc Grad   MTTKRP        1155 (0)         1155 (0)         1155 (0)         0 (0)                 
+CP-ADAM 05 Stoc Grad   Sample        722 (0)          722 (0)          722 (0)          0 (0)                 
+CP-ADAM 05 Stoc Grad   System        3.026 (0)        3.03 (0)         3.033 (0)        0 (0)                 
+CP-ADAM 05 Stoc Grad   dF/dM         809.6 (0)        817.5 (0)        825.3 (0)        0 (0)                 
+CP-ADAM 05a1 SG WaitBeforeSample     0.03026 (0)      0.04486 (0)      0.05945 (0)      0 (0)                 
+CP-ADAM 05a2 SG WaitBeforeSystem     0.06137 (0)      0.06896 (0)      0.07654 (0)      0 (0)                 
+CP-ADAM 05a3 SG WaitBeforeDfDM       0.01155 (0)      0.01488 (0)      0.0182 (0)       0 (0)                 
+CP-ADAM 05a4 SG WaitBeforeMTTKRP     0.7786 (0)       8.637 (0)        16.5 (0)         0 (0)                 
+CP-ADAM 05a5 SG WaitBeforeReturn     0.02461 (0)      0.02628 (0)      0.02795 (0)      0 (0)                 
+CP-ADAM 06 LocalMatrixComp           3.227 (0)        3.239 (0)        3.251 (0)        0 (0)                 
+--------------------------------------------------------------------------------------------------------------
+CP-ADAM 07 Comp Loss Func            3.235 (0)        3.235 (0)        3.235 (0)        0 (0)                 
+CP-ADAM 08 Roll Back                 0.0002075 (0)    0.0002112 (0)    0.000215 (0)     0 (0)                 
+Innerprod                            56.33 (1)        56.33 (1)        56.33 (1)        56.33 (1)             
+==============================================================================================================
+ PASS
+Sun Sep 15 23:52:38 MDT 2019 Complete

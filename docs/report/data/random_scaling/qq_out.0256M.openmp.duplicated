@@ -1,0 +1,26 @@
+TMPDIR=/tmp/8045322
+Thu Aug 29 17:06:17 MDT 2019 Starting
+--ntasks-per-socket 8 --ntasks-per-node 16 --ntasks 1 ./genten --nnz 256000000 --dims [1000,1000,500,500] --rank 16 --method gcp-sgd --index-base 0 --type gaussian --gnzs 767600 --gzs 767600 --fnzs 2558680 --fzs 2558680 --sampling semi-stratified --epochiters 1000 --maxiters 5 --prng --printitn 1 --rate 0.001 --fails 5 --frozeniters 1 --adam --adam_beta1 0.9 --adam_beta2 0.999 --mttkrp-method duplicated
+Will construct a random Ktensor/Sptensor pair:
+  Ndims = 4,  Size = [ 1000 1000 500 500 ]
+  Ncomps = 16
+  Maximum nnz = 256000000
+Data generation took 1160.336 seconds
+  Actual nnz  = 255844135
+Creating random initial guess took 4.03e-01 seconds
+Starting GCP-SGD
+Using semi-stratified sampler
+	Num samples f: 2558680 nonzeros, 2558680 zeros
+	Num samples g: 767600 nonzeros, 767600 zeros
+	Weights f: 1.00e+02 nonzeros, 9.76e+04 zeros
+	Weights g: 3.33e+02 nonzeros, 3.26e+05 zeros
+Sorting tensor for faster sampling...3.08e+01 seconds
+Initial f-est:  6.399206e+13
+Epoch   1: f-est =  1.427764e+12, step =  1.0e-03
+Epoch   2: f-est =  3.129369e+11, step =  1.0e-03
+Epoch   3: f-est =  1.087867e+11, step =  1.0e-03
+Epoch   4: f-est =  4.552046e+10, step =  1.0e-03
+Epoch   5: f-est =  2.091416e+10, step =  1.0e-03
+Final f-est:  2.091416e+10
+GCP-SGD completed 5000 iterations in 3.06e+02 seconds
+Thu Aug 29 17:35:11 MDT 2019 Complete

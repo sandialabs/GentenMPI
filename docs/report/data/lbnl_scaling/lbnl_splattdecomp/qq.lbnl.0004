@@ -1,0 +1,31 @@
+#!/bin/bash
+# LBNL tensor
+#
+#SBATCH -p short
+#SBATCH --nodes=4                     # Number of nodes with 16 cores per node
+#SBATCH -o "qq_out.lbnl.0004"
+#SBATCH -e "qq_err.lbnl.0004"
+
+#SBATCH --time=00:10:00               # Wall clock time (HH:MM:SS) 
+#SBATCH --account=FY170171            # WC ID
+
+ulimit -c unlimited
+if test "x${SLURM_JOB_ID}" = "x"; then export TMPDIR=/tmp/$$; else export TMPDIR=/tmp/${SLURM_JOB_ID}; fi; echo TMPDIR=${TMPDIR}
+
+PPS=8
+PPN=16
+let "NPES=${SLURM_JOB_NUM_NODES}*${PPN}"
+
+EXECUTABLE=./pt_adam.exe
+
+###############################
+#RUN THE TEST
+
+echo $(date) Starting 
+
+ARGS=" --file=lbnl-network.tns --minEpochs=5 --maxEpochs=5 --rank=16 --maxBadEpochs=5 --tol=0.00001 --sampling=semi-stratified --fns=200000"
+COMMAND=" --mpi=pmi2 --ntasks-per-socket ${PPS} --ntasks-per-node ${PPN} --ntasks ${NPES} ${EXECUTABLE} ${ARGS} "
+echo ${COMMAND}
+srun ${COMMAND}
+
+echo $(date) Complete 

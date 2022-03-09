@@ -1,0 +1,32 @@
+#!/bin/bash
+
+rm -f CMakeCache.txt;
+rm -rf CMakeFiles
+
+EXTRA_ARGS=$@
+
+module purge
+module load cmake/3.8
+module load gnu/7.3.1
+module load sierra-devel/intel-18.0.5-openmpi-2.1
+#module load mkl/16.0
+
+
+cmake \
+ -D CMAKE_CXX_COMPILER=icpc \
+ -D CMAKE_C_COMPILER=icc \
+ -D CMAKE_CXX_FLAGS=" -restrict" \
+ -D CMAKE_C_FLAGS=" -restrict" \
+ -D KOKKOS_ENABLE_OPENMP=ON \
+ -D KOKKOS_INLINE_BUILD=ON \
+ -D KOKKOS_ARCH=SNB \
+ -D LAPACK_LIBS=$MKL_LIBS/libmkl_rt.so \
+ -D LAPACK_ADD_LIBS="-liomp5;-lpthread;-lm;-ldl" \
+ -D debug=OFF \
+ ${EXTRA_ARGS} \
+ .. |& tee OUTPUT.CMAKE
+
+make -j 6 |& tee OUTPUT.MAKE
+
+# -D CMAKE_CXX_COMPILER=g++ \
+# -D CMAKE_C_COMPILER=gcc \

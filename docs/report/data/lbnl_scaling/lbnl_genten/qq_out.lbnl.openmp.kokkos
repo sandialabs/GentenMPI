@@ -1,0 +1,22 @@
+TMPDIR=/tmp/9142023
+Fri Jan 24 12:37:48 MST 2020 Starting
+--ntasks-per-socket 8 --ntasks-per-node 16 --ntasks 1 ./genten --input lbnl-network.tns --rank 16 --method gcp-sgd --index-base 1 --type gaussian --gnzs 9972 --gzs 10028 --fnzs 99795 --fzs 100205 --sampling semi-stratified --epochiters 1000 --maxiters 5 --prng --printitn 1 --rate 0.001 --fails 5 --frozeniters 1 --adam --adam_beta1 0.9 --adam_beta2 0.999 --mttkrp-method orig-kokkos
+Read tensor with 1698825 nonzeros, dimensions [ 1605 4198 1631 4209 868131 ], and starting index 1
+Data import took  0.856 seconds
+Creating random initial guess took 2.86e-01 seconds
+Starting GCP-SGD
+Using semi-stratified sampler
+	Num samples f: 99795 nonzeros, 100205 zeros
+	Num samples g: 9972 nonzeros, 10028 zeros
+	Weights f: 1.70e+01 nonzeros, 4.01e+14 zeros
+	Weights g: 1.70e+02 nonzeros, 4.00e+15 zeros
+Sorting tensor for faster sampling...2.09e-01 seconds
+Initial f-est:  1.418063e+12
+Epoch   1: f-est =  7.118051e+11, step =  1.0e-03
+Epoch   2: f-est =  7.100434e+11, step =  1.0e-03
+Epoch   3: f-est =  7.097511e+11, step =  1.0e-03
+Epoch   4: f-est =  7.096610e+11, step =  1.0e-03
+Epoch   5: f-est =  7.096262e+11, step =  1.0e-03
+Final f-est:  7.096262e+11
+GCP-SGD completed 5000 iterations in 1.20e+02 seconds
+Fri Jan 24 12:39:52 MST 2020 Complete

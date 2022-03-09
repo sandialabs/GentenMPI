@@ -1,0 +1,35 @@
+Keeping this code in case later add constructor of ktensor compatible with
+sptensor
+
+  // Make the domain/range maps the same as the sptensor's maps.
+  // Importers/exporters will not be needed.
+
+  for (mode_t m = 0; m < nModes; m++) {
+    modeSizes(m) = maps[m]->getMaxAllGlobalIndex()+1;
+    if (maps[m]->isOneToOne()) {
+      domainmaps[m] = maps[m];
+      rangemaps[m] = maps[m];
+    }
+    else {
+      // Domain and range maps should be one-to-one
+      // Need some Teuchos::RCP foolery to use Tpetra::createOneToOne -- ugh
+      const map_t *tmpmap = maps[m];
+      Teuchos::RCP<const map_t> oneToOneMap =
+               Tpetra::createOneToOne(Teuchos::rcp(tmpmap, false));
+                       // TODO:  use createBalancedOneToOneMap(), or at least
+                       // TODO:  a tie-breaking strategy.  Too easy for all
+                       // TODO:  elements to end up on processor zero.
+
+      freeDomainMaps[m] = true;
+      domainmaps[m] = oneToOneMap.release().get();
+                              // release prevents the one-to-one map from being
+                              // deleted when the RCP goes out of scope.
+      importers[m] = new import_t(Teuchos::rcp(domainmaps[m], false),
+                                  Teuchos::rcp(tmpmap,false));
+
+      rangemaps[m] = domainmaps[m];
+      exporters[m] = new export_t(*(importers[m]));
+
+    }
+  }
+

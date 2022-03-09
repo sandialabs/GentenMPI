@@ -1,0 +1,44 @@
+TMPDIR=/tmp/8251482
+Wed Sep 18 11:00:46 MDT 2019 Starting
+--ntasks-per-socket 8 --ntasks-per-node 16 --ntasks 1 ./genten --input chicago-crime-comm.tns --rank 10 --method gcp-sgd --index-base 1 --type poisson --gnzs 3152 --gzs 3152 --fnzs 31588 --fzs 31596 --sampling semi-stratified --epochiters 100
+0 --maxiters 25 --prng --printitn 1 --rate 0.001 --fails 5 --frozeniters 1 --adam --adam_beta1 0.9 --adam_beta2 0.999 --mttkrp-method default
+Read tensor with 5330673 nonzeros, dimensions [ 6186 24 77 32 ], and starting index 1
+Data import took  1.978 seconds
+Creating random initial guess took 2.28e-01 seconds
+createPermutation() took 6.27e-01 seconds
+Starting GCP-SGD
+Using semi-stratified sampler
+	Num samples f: 31588 nonzeros, 31596 zeros
+	Num samples g: 3152 nonzeros, 3152 zeros
+	Weights f: 1.69e+02 nonzeros, 1.14e+04 zeros
+	Weights g: 1.69e+03 nonzeros, 1.16e+05 zeros
+Sorting tensor for faster sampling...5.22e-01 seconds
+Initial f-est:  3.644635e+09
+Epoch   1: f-est =  1.934944e+08, step =  1.0e-03
+Epoch   2: f-est =  3.927663e+07, step =  1.0e-03
+Epoch   3: f-est =  2.492484e+07, step =  1.0e-03
+Epoch   4: f-est =  2.249211e+07, step =  1.0e-03
+Epoch   5: f-est =  2.218007e+07, step =  1.0e-03
+Epoch   6: f-est =  2.206045e+07, step =  1.0e-03
+Epoch   7: f-est =  2.194621e+07, step =  1.0e-03
+Epoch   8: f-est =  2.179944e+07, step =  1.0e-03
+Epoch   9: f-est =  2.162161e+07, step =  1.0e-03
+Epoch  10: f-est =  2.151460e+07, step =  1.0e-03
+Epoch  11: f-est =  2.145527e+07, step =  1.0e-03
+Epoch  12: f-est =  2.143658e+07, step =  1.0e-03
+Epoch  13: f-est =  2.142005e+07, step =  1.0e-03
+Epoch  14: f-est =  2.139532e+07, step =  1.0e-03
+Epoch  15: f-est =  2.138116e+07, step =  1.0e-03
+Epoch  16: f-est =  2.135906e+07, step =  1.0e-03
+Epoch  17: f-est =  2.135428e+07, step =  1.0e-03
+Epoch  18: f-est =  2.131883e+07, step =  1.0e-03
+Epoch  19: f-est =  2.129641e+07, step =  1.0e-03
+Epoch  20: f-est =  2.131737e+07, step =  1.0e-03, nfails = 1 (resetting to solution from last epoch)
+Epoch  21: f-est =  2.128694e+07, step =  1.0e-04
+Epoch  22: f-est =  2.127922e+07, step =  1.0e-04
+Epoch  23: f-est =  2.127460e+07, step =  1.0e-04
+Epoch  24: f-est =  2.126716e+07, step =  1.0e-04
+Epoch  25: f-est =  2.127004e+07, step =  1.0e-04, nfails = 2 (resetting to solution from last epoch)
+Final f-est:  2.126716e+07
+GCP-SGD completed 25000 iterations in 2.87e+01 seconds
+Wed Sep 18 11:01:20 MDT 2019 Complete
