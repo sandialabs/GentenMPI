@@ -93,6 +93,29 @@ public:
     }
     for (rank_t r = 0; r < rank; r++) lambda(r) = 1.;
   }
+
+  // Construct a distKtensor given an array of Tpetra::Map describing
+  // factor matrix layout and an array of Kokkos::Views to initialize the
+  // factor matrices for warm starts
+  distKtensor(rank_t rank_,
+              std::vector<const map_t *> &maps_,
+              std::vector<valueview_t> &views_,
+              const Teuchos::RCP<const Teuchos::Comm<int> > &comm_) :
+              rank(rank_),  
+              nModes(maps_.size()),
+              modeSizes(nModes),
+              lambda("distKtensor::lambda", rank),
+              factors(nModes, NULL),
+              comm(comm_)
+  {
+    // TODO:  error check that rank = views[m].extent(1)
+    // TODO:  error check that views_.size() = nModes
+    for (mode_t m = 0; m < nModes; m++) {
+      factors[m] = new factormatrix_t(maps_[m], views_[m]);
+      modeSizes[m] = maps_[m]->getMaxAllGlobalIndex()+1; // indices are 0-based
+    }
+    for (rank_t r = 0; r < rank; r++) lambda(r) = 1.;
+  }
  
   // Construct a distKtensor given a sptensor's layout
   // Use createOneToOne to make ktensor maps better align with sptensor maps

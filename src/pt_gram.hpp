@@ -62,7 +62,7 @@ public:
 
   // Constructor that does only the allocation and by default,
   // calls compute() to compute values
-  gramianMatrix(rank_t rank) : squareLocalMatrix<scalar_t>(rank) { }
+  gramianMatrix(rank_t rank_) : squareLocalMatrix<scalar_t>(rank_) { }
 
   ~gramianMatrix() {}
 

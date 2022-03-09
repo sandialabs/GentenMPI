@@ -1,5 +1,8 @@
 
 Current version of LRMV taken from Trilinos sha
+2/24/22  Made LRMV code compatible with Trilinos release branch 
+         trilinos-release-13-2-branch
+         4a5f7906a6420ee2f9450367e9cc95b28c00d744
 9/15/19  6d2b7aea899ce91dd07dc02fd40ce4f0b4a920be
 5/21/19  9fa2e68ac1e4f147d16723b2a14d5a14ee40e27d
 Before   90b41c55b0acc552e12af803b352b258b8ec84c1
@@ -19,4 +22,6 @@ add pt_lrmv_fwd.hpp to pt_lrmv_decl.hpp
 add LAYOUTRIGHT to #ifndef guards on the three include files (e.g., #ifndef
 TPETRA_LAYOUTRIGHTMULTIVECTOR_HPP_)
 
-
+2/24/22
+Change check of Kokkos::View dimensions in LRMV constructor; 
+LDA needs to be one, not numLocalRows of map.

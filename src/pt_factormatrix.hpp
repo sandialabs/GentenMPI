@@ -72,7 +72,7 @@ public:
   typedef Tpetra::MultiVector<scalar_t, lno_t, gno_t> mvector_t;
 #endif
 
-  typedef Kokkos::View<scalar_t**, typename pt::layout_t> valueview_t;
+  typedef typename mvector_t::dual_view_type::t_host valueview_t;
   typedef Tpetra::Map<lno_t, gno_t> map_t;
   
   // Need to be able to import and export factor matrices
@@ -89,6 +89,7 @@ public:
                    multivector(NULL), 
                    comm(map->getComm())
   {
+    // TODO:  error check that map is 1-to-1
     multivector = new mvector_t(map, rank);
 //    if (comm->getRank() == 0)
 //      printLayout(getLocalView());
@@ -99,9 +100,27 @@ public:
                    multivector(NULL), 
                    comm(map->getComm())
   {
+    // TODO:  error check that map is 1-to-1
     multivector = new mvector_t(Teuchos::rcp(map, false), rank);
 //    if (comm->getRank() == 0)
 //      printLayout(getLocalView());
+  }
+
+  // Constructor that allows user to provide a map
+  distFactorMatrix(const map_t * const map,
+                   const valueview_t &hostView) :
+                   multivector(NULL), 
+                   comm(map->getComm())
+  {
+    // TODO:  error check that map is 1-to-1
+    using dual_t = typename mvector_t::dual_view_type;
+    using dev_t = typename dual_t::t_dev;
+
+    auto devView = create_mirror_view_and_copy(typename dev_t::memory_space(),
+                                               hostView);
+    dual_t dualView(devView, hostView);
+
+    multivector = new mvector_t(Teuchos::rcp(map, false), dualView);
   }
 
 
@@ -118,6 +137,100 @@ public:
     multivector = new mvector_t(map, rank);
 //    if (comm->getRank() == 0)
 //      printLayout(getLocalView());
+  }
+
+
+  // Constructor that allows user to provide a view of initial factor matrix
+  // values for warm-starts in a Kokkos::View
+  distFactorMatrix(const Kokkos::View<const gno_t*, Kokkos::HostSpace> &myGids,
+                   const valueview_t &hostView,
+                   const Teuchos::RCP<const Teuchos::Comm<int> > &comm_) :
+                   multivector(NULL), 
+                   comm(comm_)
+  {
+    using dual_t = typename mvector_t::dual_view_type;
+    using dev_t = typename dual_t::t_dev;
+
+    auto devView = create_mirror_view_and_copy(typename dev_t::memory_space(),
+                                               hostView);
+    dual_t dualView(devView, hostView);
+
+    
+    Tpetra::global_size_t dummy =
+            Teuchos::OrdinalTraits<Tpetra::global_size_t>::invalid();
+
+    Teuchos::RCP<const map_t> map = 
+             Teuchos::rcp(new map_t(dummy, myGids, 0, comm));
+
+    multivector = new mvector_t(map, dualView);
+  }
+
+  // Constructor that allows user to provide a view of initial factor matrix
+  // values for warm-starts in a vectorOfPtrs (one per rank)
+  distFactorMatrix(const rank_t rank, 
+                   const std::vector<gno_t> &myGids,
+                   const std::vector<scalar_t *> &vectorOfPtrs,
+                   const Teuchos::RCP<const Teuchos::Comm<int> > &comm_) :
+                   multivector(NULL), 
+                   comm(comm_)
+  {
+    // TODO:  This constructor will not work with GPUs without UVM, and
+    // may not work with GPUs with UVM.  (Of course, neither will the rest
+    // of gentenmpi.  Very sad.)
+    using dual_t = typename mvector_t::dual_view_type;
+    using dev_t = typename dual_t::t_dev;
+    using host_t = typename dual_t::t_host;
+
+    size_t stride = (rank > 1 ? vectorOfPtrs[1] - vectorOfPtrs[0] 
+                              : myGids.size());
+    if (rank > 2) {
+      // error check -- to cast to Kokkos::View<scalar_t**>,
+      // vectorOfPtrs must have equal stride between ptrs
+      for (rank_t r = 2; r < rank; r++) {
+        auto newstride = vectorOfPtrs[r] - vectorOfPtrs[r-1];
+        if (newstride != stride) {
+          throw std::runtime_error("distFactorMatrix constructor requires "
+                                   "equally strided vectorOfPtrs (i.e., same "
+                                   "number of bytes between successive "
+                                   "entries)");
+        }
+      }
+    }
+
+    // we know that all pointers are the same distance apart
+    // cast the total memory space of the pointers to a Kokkos 2D view
+    // with first dimension = number of scalars they are apart
+    size_t nLocal = myGids.size();
+    host_t hostViewStride(vectorOfPtrs[0], stride, rank);  // unmanaged view
+
+    host_t hostView;
+
+    // If stride == number of GIDs, we have the view that we want.  
+    // Otherwise, subview the view down to only the number of GIDs.
+
+    if (stride == nLocal) {
+      hostView = hostViewStride;
+    }
+    else {
+      const std::pair<size_t, size_t> gidRng(0, nLocal);
+      hostView = Kokkos::subview(hostViewStride, gidRng, Kokkos::ALL());
+    }
+
+    // Then the rest follows like the constructor with a KokkosView
+    auto devView = create_mirror_view_and_copy(typename dev_t::memory_space(),
+                                               hostView);
+    dual_t dualView(devView, hostView);
+    
+    Tpetra::global_size_t dummy =
+            Teuchos::OrdinalTraits<Tpetra::global_size_t>::invalid();
+
+    auto myGidsView = 
+         Kokkos::View<const gno_t*, Kokkos::HostSpace>(myGids.data(), nLocal);
+
+    Teuchos::RCP<const map_t> map = 
+             Teuchos::rcp(new map_t(dummy, myGidsView, 0, comm));
+
+    multivector = new mvector_t(map, dualView);
   }
 
 
