@@ -389,11 +389,11 @@ int  testSampledSptensor<scalar_t>::resampleSptensor(
     // Pretty unlikely (though not impossible) that we'd resample the 
     // same indices.
 
-    auto globalIndices = sptensor.getGlobalIndices();
+    auto gids = sptensor.getGlobalIndices();
 
     for (pt::mode_t m = 0; m < nModes; m++) {
-      keepFirstIndex[m] = globalIndices(0,m);
-      keepLastIndex[m] = globalIndices(nIndices-1, m);
+      keepFirstIndex[m] = gids(0,m);
+      keepLastIndex[m] = gids(nIndices-1, m);
     }
   }
 

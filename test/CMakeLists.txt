@@ -46,6 +46,68 @@ SET_TESTS_PROPERTIES(test_factormatrix_9
 )
 
 ############################################################
+ADD_EXECUTABLE(pt_test_warmstart_factormatrix.exe pt_test_warmstart_factormatrix.cpp)
+TARGET_LINK_LIBRARIES(pt_test_warmstart_factormatrix.exe ${ALL_LIBRARIES})
+
+ADD_TEST(test_warmstart_factormatrix pt_test_warmstart_factormatrix.exe)
+SET_TESTS_PROPERTIES(test_warmstart_factormatrix
+   PROPERTIES
+   PASS_REGULAR_EXPRESSION "PASS"
+   FAIL_REGULAR_EXPRESSION "FAIL"
+)
+
+ADD_TEST(test_warmstart_factormatrix_4 ${MPI4} pt_test_warmstart_factormatrix.exe)
+SET_TESTS_PROPERTIES(test_warmstart_factormatrix_4
+   PROPERTIES
+   PASS_REGULAR_EXPRESSION "PASS"
+   FAIL_REGULAR_EXPRESSION "FAIL"
+)
+
+ADD_TEST(test_warmstart_factormatrix_7 ${MPI7} pt_test_warmstart_factormatrix.exe)
+SET_TESTS_PROPERTIES(test_warmstart_factormatrix_7
+   PROPERTIES
+   PASS_REGULAR_EXPRESSION "PASS"
+   FAIL_REGULAR_EXPRESSION "FAIL"
+)
+ADD_TEST(test_warmstart_factormatrix_9 ${MPI9} pt_test_warmstart_factormatrix.exe)
+SET_TESTS_PROPERTIES(test_warmstart_factormatrix_9
+   PROPERTIES
+   PASS_REGULAR_EXPRESSION "PASS"
+   FAIL_REGULAR_EXPRESSION "FAIL"
+)
+
+############################################################
+ADD_EXECUTABLE(pt_test_warmstart_ktensor.exe pt_test_warmstart_ktensor.cpp)
+TARGET_LINK_LIBRARIES(pt_test_warmstart_ktensor.exe ${ALL_LIBRARIES})
+
+ADD_TEST(test_warmstart_ktensor pt_test_warmstart_ktensor.exe)
+SET_TESTS_PROPERTIES(test_warmstart_ktensor
+   PROPERTIES
+   PASS_REGULAR_EXPRESSION "PASS"
+   FAIL_REGULAR_EXPRESSION "FAIL"
+)
+
+ADD_TEST(test_warmstart_ktensor_4 ${MPI4} pt_test_warmstart_ktensor.exe)
+SET_TESTS_PROPERTIES(test_warmstart_ktensor_4
+   PROPERTIES
+   PASS_REGULAR_EXPRESSION "PASS"
+   FAIL_REGULAR_EXPRESSION "FAIL"
+)
+
+ADD_TEST(test_warmstart_ktensor_7 ${MPI7} pt_test_warmstart_ktensor.exe)
+SET_TESTS_PROPERTIES(test_warmstart_ktensor_7
+   PROPERTIES
+   PASS_REGULAR_EXPRESSION "PASS"
+   FAIL_REGULAR_EXPRESSION "FAIL"
+)
+ADD_TEST(test_warmstart_ktensor_9 ${MPI9} pt_test_warmstart_ktensor.exe)
+SET_TESTS_PROPERTIES(test_warmstart_ktensor_9
+   PROPERTIES
+   PASS_REGULAR_EXPRESSION "PASS"
+   FAIL_REGULAR_EXPRESSION "FAIL"
+)
+
+############################################################
 ADD_EXECUTABLE(pt_test_ktensor.exe pt_test_ktensor.cpp)
 TARGET_LINK_LIBRARIES(pt_test_ktensor.exe ${ALL_LIBRARIES})
 
