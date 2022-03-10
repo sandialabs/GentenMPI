@@ -537,7 +537,7 @@ void distSptensor<SCALAR>::buildMapsWithBB()
     // Initialize uniqueIndicesView.
     // These lists are likely too large; we'll subview them before sending them
     // to the map constructor.
-    char name[24];
+    char name[30];
     sprintf(name, "uniqueIndicesView%02d", m);
     uniqueIndicesView[m] = Kokkos::View<gno_t *>(name, nIndices);
 
@@ -669,7 +669,7 @@ void distSptensor<SCALAR>::buildMaps()
     // Initialize uniqueIndicesView.
     // These lists are likely too large; we'll subview them before sending them
     // to the map constructor.
-    char name[24];
+    char name[30];
     sprintf(name, "uniqueIndicesView%02d", m);
     uniqueIndicesView[m] = Kokkos::View<gno_t *>(name, nIndices);
 
